@@ -5,6 +5,17 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node unit tests (shared validation vectors)
+        working-directory: backend-node
+        run: npm ci && npm test
+      - name: Rust unit tests (same shared vectors)
+        working-directory: backend-rust
+        run: cargo test --locked
   verify-migration:
     runs-on: ubuntu-latest
     timeout-minutes: 40

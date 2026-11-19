@@ -76,8 +76,14 @@ pub fn bool_field(o: &Obj, f: &str, d: &mut Details) -> Option<bool> {
     }
 }
 
+/// JavaScript's `\s` (what the original uses). Not Unicode White_Space: JS counts U+FEFF and not U+0085.
+fn js_whitespace(c: char) -> bool {
+    matches!(c, '\t' | '\n' | '\u{b}' | '\u{c}' | '\r' | ' ' | '\u{a0}' | '\u{1680}' | '\u{2000}'..='\u{200a}'
+        | '\u{2028}' | '\u{2029}' | '\u{202f}' | '\u{205f}' | '\u{3000}' | '\u{feff}')
+}
+
 pub fn valid_email(s: &str) -> bool {
-    if s.chars().any(|c| c.is_whitespace()) {
+    if s.chars().any(js_whitespace) {
         return false;
     }
     let parts: Vec<&str> = s.split('@').collect();
@@ -99,4 +105,60 @@ pub fn escape_regex(s: &str) -> String {
         out.push(c);
     }
     out
+}
+
+#[cfg(test)]
+mod tests {
+    //! Runs the shared vectors in api-contract/validation-vectors.json (backend-node/test runs the same file).
+    use super::*;
+
+    const VECTORS: &str = include_str!("../../api-contract/validation-vectors.json");
+
+    fn vectors() -> Value {
+        serde_json::from_str(VECTORS).unwrap()
+    }
+
+    #[test]
+    fn email_vectors() {
+        for c in vectors()["email"].as_array().unwrap() {
+            let input = c["in"].as_str().unwrap();
+            assert_eq!(valid_email(input), c["valid"].as_bool().unwrap(), "{input:?}");
+        }
+    }
+
+    fn run_case(c: &Value, kind: &str) {
+        let body = c["body"].as_str().unwrap();
+        let o: Obj = serde_json::from_str::<Value>(body).unwrap().as_object().unwrap().clone();
+        let (field, required) = (c["field"].as_str().unwrap(), c["required"].as_bool().unwrap());
+        let (min, max) = (c["min"].as_i64().unwrap(), c["max"].as_i64().unwrap());
+        let mut d: Details = vec![];
+        let value = if kind == "str" {
+            str_field(&o, field, min as usize, max as usize, &mut d, required).map(Value::from).unwrap_or(Value::Null)
+        } else {
+            int_field(&o, field, min, max, &mut d, required).map(Value::from).unwrap_or(Value::Null)
+        };
+        assert_eq!(value, c["expect"]["value"], "{body}");
+        assert_eq!(Value::Array(d), c["expect"]["details"], "{body}");
+    }
+
+    #[test]
+    fn str_vectors() {
+        for c in vectors()["str"].as_array().unwrap() {
+            run_case(c, "str");
+        }
+    }
+
+    #[test]
+    fn int_vectors() {
+        for c in vectors()["int"].as_array().unwrap() {
+            run_case(c, "int");
+        }
+    }
+
+    #[test]
+    fn escape_regex_vectors() {
+        for c in vectors()["escapeRegex"].as_array().unwrap() {
+            assert_eq!(escape_regex(c["in"].as_str().unwrap()), c["out"].as_str().unwrap());
+        }
+    }
 }

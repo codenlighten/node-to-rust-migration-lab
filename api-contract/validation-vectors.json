@@ -1,0 +1,494 @@
+{
+ "_comment": "Shared test vectors. backend-node/test and backend-rust/src/validate.rs both run every case; a validator change that breaks parity fails one side.",
+ "email": [
+  {
+   "in": "a@b.co",
+   "valid": true
+  },
+  {
+   "in": "a.b+c@sub.example.org",
+   "valid": true
+  },
+  {
+   "in": "a@b",
+   "valid": false
+  },
+  {
+   "in": "a@.co",
+   "valid": false
+  },
+  {
+   "in": "a@b.",
+   "valid": false
+  },
+  {
+   "in": "@b.co",
+   "valid": false
+  },
+  {
+   "in": "a@",
+   "valid": false
+  },
+  {
+   "in": "a@@b.co",
+   "valid": false
+  },
+  {
+   "in": "a b@c.de",
+   "valid": false
+  },
+  {
+   "in": "a@b.co ",
+   "valid": false
+  },
+  {
+   "in": "a @b.co",
+   "valid": false
+  },
+  {
+   "in": "a @b.co",
+   "valid": false
+  },
+  {
+   "in": "a﻿@b.co",
+   "valid": false,
+   "note": "U+FEFF IS whitespace for JavaScript's \\s, unlike Unicode White_Space"
+  },
+  {
+   "in": "a@b.co",
+   "valid": true,
+   "note": "U+0085 is not whitespace for JavaScript's \\s (the original's behaviour), unlike Unicode White_Space"
+  },
+  {
+   "in": "a​@b.co",
+   "valid": true
+  },
+  {
+   "in": "é@b.co",
+   "valid": true
+  },
+  {
+   "in": "a@b..c",
+   "valid": true
+  },
+  {
+   "in": "",
+   "valid": false
+  }
+ ],
+ "str": [
+  {
+   "body": "{\"f\":\"abc\"}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": "abc",
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":\"\"}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 1 and 3 characters"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":\"abcd\"}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 1 and 3 characters"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "is required"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":null}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "is required"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{}",
+   "field": "f",
+   "min": 0,
+   "max": 3,
+   "required": false,
+   "expect": {
+    "value": null,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":5}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be a string"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":[\"a\"]}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": false,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be a string"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":\"\\ud83d\\ude42\\ud83d\\ude42\\ud83d\\ude42\"}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": "🙂🙂🙂",
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":\"\\ud83d\\ude42\\ud83d\\ude42\\ud83d\\ude42\\ud83d\\ude42\"}",
+   "field": "f",
+   "min": 1,
+   "max": 3,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 1 and 3 characters"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":\"e\\u0301\"}",
+   "field": "f",
+   "min": 1,
+   "max": 2,
+   "required": true,
+   "expect": {
+    "value": "é",
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":\"e\\u0301x\"}",
+   "field": "f",
+   "min": 1,
+   "max": 2,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 1 and 2 characters"
+     }
+    ]
+   }
+  }
+ ],
+ "int": [
+  {
+   "body": "{\"f\":5}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": 5,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":2.0}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": 2,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":1e1}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": 10,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":1.5}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be an integer"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":\"5\"}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be an integer"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":true}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be an integer"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":null}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": false,
+   "expect": {
+    "value": null,
+    "details": []
+   }
+  },
+  {
+   "body": "{}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "is required"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":11}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 0 and 10"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":-1}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 0 and 10"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":1e20}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 0 and 10"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":-0}",
+   "field": "f",
+   "min": 0,
+   "max": 10,
+   "required": true,
+   "expect": {
+    "value": 0,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":2147483647}",
+   "field": "f",
+   "min": 0,
+   "max": 2147483647,
+   "required": true,
+   "expect": {
+    "value": 2147483647,
+    "details": []
+   }
+  },
+  {
+   "body": "{\"f\":2147483648}",
+   "field": "f",
+   "min": 0,
+   "max": 2147483647,
+   "required": true,
+   "expect": {
+    "value": null,
+    "details": [
+     {
+      "field": "f",
+      "message": "must be between 0 and 2147483647"
+     }
+    ]
+   }
+  },
+  {
+   "body": "{\"f\":-1000000}",
+   "field": "f",
+   "min": -1000000,
+   "max": 1000000,
+   "required": true,
+   "expect": {
+    "value": -1000000,
+    "details": []
+   }
+  }
+ ],
+ "escapeRegex": [
+  {
+   "in": "plain",
+   "out": "plain"
+  },
+  {
+   "in": "a.b",
+   "out": "a\\.b"
+  },
+  {
+   "in": "(x)",
+   "out": "\\(x\\)"
+  },
+  {
+   "in": "[a-z]*",
+   "out": "\\[a-z\\]\\*"
+  },
+  {
+   "in": "a+b?^$",
+   "out": "a\\+b\\?\\^\\$"
+  },
+  {
+   "in": "{1}|\\",
+   "out": "\\{1\\}\\|\\\\"
+  },
+  {
+   "in": "🙂",
+   "out": "🙂"
+  },
+  {
+   "in": "-/#",
+   "out": "-/#"
+  }
+ ]
+}

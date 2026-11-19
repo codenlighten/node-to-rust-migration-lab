@@ -57,6 +57,8 @@ export const groups = [
       S("register: wrong types", "POST", "/api/auth/register", { body: { email: 5, password: [], name: true } }),
       S("register: bad email", "POST", "/api/auth/register", { body: { email: "no-at-sign", password: "password1", name: "X" } }),
       S("register: email with trailing dot", "POST", "/api/auth/register", { body: { email: "a@b.", password: "password1", name: "X" } }),
+      S("register: email with U+FEFF (whitespace to JS, not to Unicode)", "POST", "/api/auth/register", { body: '{"email":"bom\\ufeff@y.io","password":"password1","name":"X"}' }),
+      S("register: email with U+0085 (not whitespace to JS)", "POST", "/api/auth/register", { body: '{"email":"nel\\u0085@y.io","password":"password1","name":"X"}' }),
       S("register: short password", "POST", "/api/auth/register", { body: { email: "x@y.io", password: "short", name: "X" } }),
       S("register: name of 100 emoji ok boundary", "POST", "/api/auth/register", { body: { email: "emoji@y.io", password: "password1", name: emoji(100) } }),
       S("register: name of 101 emoji rejected", "POST", "/api/auth/register", { body: { email: "emoji2@y.io", password: "password1", name: emoji(101) } }),
