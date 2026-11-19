@@ -1,0 +1,14 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  verify-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run migration verification (contract + concurrency)
+        run: make verify-migration
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: migration-reports, path: migration-tests/report/ }

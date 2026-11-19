@@ -1,0 +1,86 @@
+# Demo stack: one shared MongoDB, both backends on the SAME database (strangler pattern),
+# a gateway that routes traffic, and the dashboard.  `--profile verify` adds the two isolated
+# backends the verification harness needs (each on its own identically seeded database).
+name: node-rust-migration-lab
+
+x-backend-env: &backend-env
+  MONGO_URL: mongodb://mongo:27017/?replicaSet=rs0
+  JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
+  ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+
+services:
+  mongo:
+    image: mongo:7
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports: ["127.0.0.1:27018:27017"]
+    volumes: ["mongo-data:/data/db"]
+    healthcheck:
+      # Initiates the single-node replica set on first run (transactions need one), then reports healthy.
+      test: >
+        mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }" | grep -q 1
+      interval: 3s
+      timeout: 10s
+      retries: 30
+      start_period: 5s
+
+  seed:
+    build: ./migration-tests
+    command: ["node", "seed.mjs"]
+    environment: { MONGO_URL: "mongodb://mongo:27017/?replicaSet=rs0", SEED_DB: lab }
+    depends_on: { mongo: { condition: service_healthy } }
+    restart: "no"
+
+  node-api:
+    build: ./backend-node
+    environment: { <<: *backend-env, MONGO_DB: lab, PORT: "3001" }
+    ports: ["127.0.0.1:3001:3001"]
+    depends_on: { mongo: { condition: service_healthy }, seed: { condition: service_completed_successfully } }
+
+  rust-api:
+    build: ./backend-rust
+    environment: { <<: *backend-env, MONGO_DB: lab, PORT: "3002" }
+    ports: ["127.0.0.1:3002:3002"]
+    depends_on: { mongo: { condition: service_healthy }, seed: { condition: service_completed_successfully } }
+
+  gateway:
+    build: ./gateway
+    environment: { NODE_URL: "http://node-api:3001", RUST_URL: "http://rust-api:3002", PORT: "8080" }
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on: [node-api, rust-api]
+
+  frontend:
+    build: ./frontend
+    ports: ["127.0.0.1:3000:80"]
+    volumes:
+      - ./migration-tests/report:/usr/share/nginx/html/reports:ro
+      - ./benchmarks/results:/usr/share/nginx/html/benchmarks:ro
+    depends_on: [gateway]
+
+  # ---- verification profile: isolated databases, identical seed ----
+  node-verify:
+    profiles: [verify]
+    build: ./backend-node
+    environment: { <<: *backend-env, MONGO_DB: verify_node, PORT: "3011" }
+    ports: ["127.0.0.1:3011:3011"]
+    depends_on: { mongo: { condition: service_healthy } }
+
+  rust-verify:
+    profiles: [verify]
+    build: ./backend-rust
+    environment: { <<: *backend-env, MONGO_DB: verify_rust, PORT: "3012" }
+    ports: ["127.0.0.1:3012:3012"]
+    depends_on: { mongo: { condition: service_healthy } }
+
+  verify:
+    profiles: [verify]
+    build: ./migration-tests
+    command: ["sh", "-c", "node verify.mjs && node concurrency.mjs"]
+    environment:
+      MONGO_URL: mongodb://mongo:27017/?replicaSet=rs0
+      ORIGINAL_URL: http://node-verify:3011
+      REPLACEMENT_URL: http://rust-verify:3012
+    volumes: ["./migration-tests/report:/app/report"]
+    depends_on: [node-verify, rust-verify]
+
+volumes:
+  mongo-data:

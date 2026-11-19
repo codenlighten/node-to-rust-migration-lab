@@ -1,0 +1,8 @@
+node_modules/
+dist/
+target/
+.cargo-target/
+.env
+*.log
+benchmarks/results/*.tmp
+backend-rust/bin/

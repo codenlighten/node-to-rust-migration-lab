@@ -1,0 +1,5793 @@
+{
+  "knownDifferences": 2,
+  "generatedAt": "2026-11-19T01:48:28.818Z",
+  "original": {
+    "name": "node",
+    "url": "http://node-verify:3011",
+    "db": "verify_node"
+  },
+  "replacement": {
+    "name": "rust",
+    "url": "http://rust-verify:3012",
+    "db": "verify_rust"
+  },
+  "total": 158,
+  "passed": 158,
+  "dbDiffGroups": 0,
+  "verified": true,
+  "groups": [
+    {
+      "group": "health & routing",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "health",
+          "request": "GET /health",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "status": "ok"
+          },
+          "replacementBody": {
+            "status": "ok"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "ready",
+          "request": "GET /ready",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "status": "ready"
+          },
+          "replacementBody": {
+            "status": "ready"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "unknown route",
+          "request": "GET /api/nope",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "wrong method on known route",
+          "request": "DELETE /health",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "PUT on collection",
+          "request": "PUT /api/products",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          }
+        }
+      ],
+      "dbDiff": []
+    },
+    {
+      "group": "routing & query-string edge cases",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "trailing slash",
+          "request": "GET /api/products/",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "upper-case path",
+          "request": "GET /API/Products/1",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "double slash",
+          "request": "GET //api/products",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "duplicate page param",
+          "request": "GET /api/products?page=1&page=2",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "duplicate search param",
+          "request": "GET /api/products?search=a&search=b",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "search",
+                  "message": "must be at most 100 characters"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "search",
+                  "message": "must be at most 100 characters"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "duplicate sort param",
+          "request": "GET /api/products?sort=name&sort=id",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "sort",
+                  "message": "must be one of id, newest, name, price_asc, price_desc"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "sort",
+                  "message": "must be one of id, newest, name, price_asc, price_desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "bracket key is literal",
+          "request": "GET /api/products?page[x]=1",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "plus decodes to space",
+          "request": "GET /api/products?search=Wireless+Mouse",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "percent-encoded unicode search",
+          "request": "GET /api/products?search=%F0%9F%99%82",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          },
+          "replacementBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "invalid percent escape",
+          "request": "GET /api/products?search=%E0%A4%A",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          },
+          "replacementBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "empty search value",
+          "request": "GET /api/products?search=",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "search is 101 chars",
+          "request": "GET /api/products?search=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "search",
+                  "message": "must be at most 100 characters"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "search",
+                  "message": "must be at most 100 characters"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "unknown query params ignored",
+          "request": "GET /api/products?foo=bar",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "numeric overflow in page",
+          "request": "GET /api/products?page=9999999999",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "leading zeros in id",
+          "request": "GET /api/products/0001",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "negative id",
+          "request": "GET /api/products/-1",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "HEAD request",
+          "request": "HEAD /api/products",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": null,
+          "replacementBody": null
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "OPTIONS request",
+          "request": "OPTIONS /api/products",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Route not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "extra body fields ignored",
+          "request": "POST /api/auth/login",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "body is JSON null",
+          "request": "POST /api/auth/login",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "body is JSON number",
+          "request": "POST /api/auth/login",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          }
+        },
+        {
+          "known": "JS JSON.parse turns 1e999 into Infinity; serde_json rejects it as malformed. Both reject the request (400) but with different messages.",
+          "knownDiff": true,
+          "knownStale": false,
+          "name": "JSON number out of f64 range (1e999)",
+          "request": "POST /api/auth/login",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [
+            "body.error.message: \"Request validation failed\" != \"Malformed JSON body\"",
+            "body.error.details: [{\"field\":\"email\",\"message\":\"must be a string\"},{\"field\":\"password\",\"message\":\"must be a string\"}] != undefined"
+          ],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "password",
+                  "message": "must be a string"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Malformed JSON body"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "duplicate JSON keys (last wins)",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "unicode escape in JSON string",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "known": "JS JSON.parse accepts \\ud800 as a string; serde_json rejects lone surrogates (RFC 8259 leaves this implementation-defined). Node answers 401, Rust 400.",
+          "knownDiff": true,
+          "knownStale": false,
+          "name": "lone surrogate escape in JSON string",
+          "request": "POST /api/auth/login",
+          "original": 401,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [
+            "status: 401 != 400",
+            "body.error.code: \"INVALID_CREDENTIALS\" != \"VALIDATION_ERROR\"",
+            "body.error.message: \"Invalid email or password\" != \"Malformed JSON body\""
+          ],
+          "originalBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Malformed JSON body"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "BOM-prefixed JSON body",
+          "request": "POST /api/auth/login",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          }
+        }
+      ],
+      "dbDiff": []
+    },
+    {
+      "group": "authentication",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: malformed JSON",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Malformed JSON body"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Malformed JSON body"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: array body",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: empty body",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request body must be a JSON object"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: missing fields",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "is required"
+                },
+                {
+                  "field": "password",
+                  "message": "is required"
+                },
+                {
+                  "field": "name",
+                  "message": "is required"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "is required"
+                },
+                {
+                  "field": "password",
+                  "message": "is required"
+                },
+                {
+                  "field": "name",
+                  "message": "is required"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: wrong types",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "password",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "name",
+                  "message": "must be a string"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "password",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "name",
+                  "message": "must be a string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: bad email",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: email with trailing dot",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: short password",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "password",
+                  "message": "must be between 8 and 72 characters"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "password",
+                  "message": "must be between 8 and 72 characters"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: name of 100 emoji ok boundary",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 4,
+            "email": "emoji@y.io",
+            "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 4,
+            "email": "emoji@y.io",
+            "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: name of 101 emoji rejected",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "name",
+                  "message": "must be between 1 and 100 characters"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "name",
+                  "message": "must be between 1 and 100 characters"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: mixed-case email",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 5,
+            "email": "mixed@case.io",
+            "name": "Mixed",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 5,
+            "email": "mixed@case.io",
+            "name": "Mixed",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: duplicate (case-insensitive)",
+          "request": "POST /api/auth/register",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "EMAIL_TAKEN",
+              "message": "Email is already registered"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "EMAIL_TAKEN",
+              "message": "Email is already registered"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: non-JSON content type is still parsed",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 7,
+            "email": "ct@y.io",
+            "name": "CT",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 7,
+            "email": "ct@y.io",
+            "name": "CT",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "login: validation",
+          "request": "POST /api/auth/login",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be between 1 and 254 characters"
+                },
+                {
+                  "field": "password",
+                  "message": "is required"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be between 1 and 254 characters"
+                },
+                {
+                  "field": "password",
+                  "message": "is required"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "login: unknown user",
+          "request": "POST /api/auth/login",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "login: wrong password",
+          "request": "POST /api/auth/login",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INVALID_CREDENTIALS",
+              "message": "Invalid email or password"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "login: ok (case-insensitive email)",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "me: no header",
+          "request": "GET /api/me",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "me: malformed token",
+          "request": "GET /api/me",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid or expired token"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid or expired token"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "me: ok",
+          "request": "GET /api/me",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "body too large",
+          "request": "POST /api/auth/login",
+          "original": 413,
+          "replacement": 413,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "PAYLOAD_TOO_LARGE",
+              "message": "Request body too large"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "PAYLOAD_TOO_LARGE",
+              "message": "Request body too large"
+            }
+          }
+        }
+      ],
+      "dbDiff": []
+    },
+    {
+      "group": "products: read, search, pagination",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "list default",
+          "request": "GET /api/products",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "page 2 size 2",
+          "request": "GET /api/products?page=2&pageSize=2",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 2,
+            "pageSize": 2,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 2,
+            "pageSize": 2,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "beyond last page",
+          "request": "GET /api/products?page=50",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [],
+            "page": 50,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [],
+            "page": 50,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "sort price_asc",
+          "request": "GET /api/products?sort=price_asc",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "sort price_desc",
+          "request": "GET /api/products?sort=price_desc",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "sort name",
+          "request": "GET /api/products?sort=name",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "sort newest",
+          "request": "GET /api/products?sort=newest",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 5
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "search mug",
+          "request": "GET /api/products?search=MUG",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "search sku",
+          "request": "GET /api/products?search=kb-0",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "search with regex metacharacters",
+          "request": "GET /api/products?search=(%5B.*",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          },
+          "replacementBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "search no match",
+          "request": "GET /api/products?search=zzzz",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          },
+          "replacementBody": {
+            "items": [],
+            "page": 1,
+            "pageSize": 20,
+            "total": 0
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "price range",
+          "request": "GET /api/products?minPrice=3000&maxPrice=9000&sort=price_asc",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 2
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 2
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "invalid params",
+          "request": "GET /api/products?page=0&pageSize=101&sort=bogus&minPrice=-1",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be between 1 and 1000000"
+                },
+                {
+                  "field": "pageSize",
+                  "message": "must be between 1 and 100"
+                },
+                {
+                  "field": "minPrice",
+                  "message": "must be an integer"
+                },
+                {
+                  "field": "sort",
+                  "message": "must be one of id, newest, name, price_asc, price_desc"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be between 1 and 1000000"
+                },
+                {
+                  "field": "pageSize",
+                  "message": "must be between 1 and 100"
+                },
+                {
+                  "field": "minPrice",
+                  "message": "must be an integer"
+                },
+                {
+                  "field": "sort",
+                  "message": "must be one of id, newest, name, price_asc, price_desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "non-numeric page",
+          "request": "GET /api/products?page=abc",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "page",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get one",
+          "request": "GET /api/products/1",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 50,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get missing",
+          "request": "GET /api/products/999",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get non-numeric id",
+          "request": "GET /api/products/abc",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get zero id",
+          "request": "GET /api/products/0",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get id beyond int32",
+          "request": "GET /api/products/99999999999",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "id",
+                  "message": "must be a positive integer"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "dbDiff": []
+    },
+    {
+      "group": "products: admin writes",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: no auth",
+          "request": "POST /api/products",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: as customer",
+          "request": "POST /api/products",
+          "original": 403,
+          "replacement": 403,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Admin role required"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Admin role required"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: validation",
+          "request": "POST /api/products",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "sku",
+                  "message": "must be between 1 and 64 characters"
+                },
+                {
+                  "field": "name",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "priceCents",
+                  "message": "must be between 0 and 2147483647"
+                },
+                {
+                  "field": "stock",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "sku",
+                  "message": "must be between 1 and 64 characters"
+                },
+                {
+                  "field": "name",
+                  "message": "must be a string"
+                },
+                {
+                  "field": "priceCents",
+                  "message": "must be between 0 and 2147483647"
+                },
+                {
+                  "field": "stock",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: ok",
+          "request": "POST /api/products",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable",
+            "description": "USB",
+            "priceCents": 999,
+            "stock": 5,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable",
+            "description": "USB",
+            "priceCents": 999,
+            "stock": 5,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: integer-valued floats accepted (JSON 12.0)",
+          "request": "POST /api/products",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 7,
+            "sku": "NEW-2",
+            "name": "Float",
+            "description": "",
+            "priceCents": 12,
+            "stock": 10,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 7,
+            "sku": "NEW-2",
+            "name": "Float",
+            "description": "",
+            "priceCents": 12,
+            "stock": 10,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: duplicate sku",
+          "request": "POST /api/products",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "SKU_TAKEN",
+              "message": "SKU is already in use"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "SKU_TAKEN",
+              "message": "SKU is already in use"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: name of 200 emoji ok",
+          "request": "POST /api/products",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 9,
+            "sku": "EM-200",
+            "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+            "description": "",
+            "priceCents": 1,
+            "stock": 0,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 9,
+            "sku": "EM-200",
+            "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+            "description": "",
+            "priceCents": 1,
+            "stock": 0,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: name of 201 emoji rejected",
+          "request": "POST /api/products",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "name",
+                  "message": "must be between 1 and 200 characters"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "name",
+                  "message": "must be between 1 and 200 characters"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "update: empty",
+          "request": "PUT /api/products/6",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "body",
+                  "message": "at least one field is required"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "body",
+                  "message": "at least one field is required"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "update: ok",
+          "request": "PUT /api/products/6",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 5,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 5,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "update: missing product",
+          "request": "PUT /api/products/999",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: add",
+          "request": "PATCH /api/products/6/stock",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 9,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 9,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: add via 2.0",
+          "request": "PATCH /api/products/6/stock",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 11,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 6,
+            "sku": "NEW-1",
+            "name": "Cable v2",
+            "description": "USB",
+            "priceCents": 1099,
+            "stock": 11,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: remove too many",
+          "request": "PATCH /api/products/6/stock",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 6,
+                  "requested": 1000,
+                  "available": 11
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 6,
+                  "requested": 1000,
+                  "available": 11
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: zero",
+          "request": "PATCH /api/products/6/stock",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "delta",
+                  "message": "must not be zero"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "delta",
+                  "message": "must not be zero"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: fractional",
+          "request": "PATCH /api/products/6/stock",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "delta",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "delta",
+                  "message": "must be an integer"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "stock: missing product",
+          "request": "PATCH /api/products/999/stock",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "delete: as customer",
+          "request": "DELETE /api/products/6",
+          "original": 403,
+          "replacement": 403,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Admin role required"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Admin role required"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "delete: ok",
+          "request": "DELETE /api/products/6",
+          "original": 204,
+          "replacement": 204,
+          "pass": true,
+          "diffs": [],
+          "originalBody": null,
+          "replacementBody": null
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "delete: already deleted",
+          "request": "DELETE /api/products/6",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get deleted",
+          "request": "GET /api/products/6",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "list after delete",
+          "request": "GET /api/products?sort=newest",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 9,
+                "sku": "EM-200",
+                "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+                "description": "",
+                "priceCents": 1,
+                "stock": 0,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 7,
+                "sku": "NEW-2",
+                "name": "Float",
+                "description": "",
+                "priceCents": 12,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 7
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 9,
+                "sku": "EM-200",
+                "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+                "description": "",
+                "priceCents": 1,
+                "stock": 0,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 7,
+                "sku": "NEW-2",
+                "name": "Float",
+                "description": "",
+                "priceCents": 12,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 5,
+                "sku": "LM-005",
+                "name": "Limited Edition Mug",
+                "description": "Only 10 exist (concurrency demo)",
+                "priceCents": 1500,
+                "stock": 10,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 4,
+                "sku": "HD-004",
+                "name": "USB-C Dock",
+                "description": "8-in-1",
+                "priceCents": 12900,
+                "stock": 40,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 3,
+                "sku": "MN-003",
+                "name": "27in Monitor",
+                "description": "1440p IPS",
+                "priceCents": 24999,
+                "stock": 15,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 2,
+                "sku": "MS-002",
+                "name": "Wireless Mouse",
+                "description": "Ergonomic, 2.4GHz",
+                "priceCents": 3499,
+                "stock": 120,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              },
+              {
+                "id": 1,
+                "sku": "KB-001",
+                "name": "Mechanical Keyboard",
+                "description": "Tenkeyless, brown switches",
+                "priceCents": 8999,
+                "stock": 50,
+                "active": true,
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 7
+          }
+        }
+      ],
+      "dbDiff": []
+    },
+    {
+      "group": "orders & payments",
+      "steps": [
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register admin",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          },
+          "replacementBody": {
+            "id": 1,
+            "email": "admin@example.com",
+            "name": "admin",
+            "role": "admin"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login admin",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 1,
+              "email": "admin@example.com",
+              "name": "admin",
+              "role": "admin"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register alice",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 2,
+            "email": "alice@example.com",
+            "name": "alice",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login alice",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 2,
+              "email": "alice@example.com",
+              "name": "alice",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: register bob",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 3,
+            "email": "bob@example.com",
+            "name": "bob",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "setup: login bob",
+          "request": "POST /api/auth/login",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          },
+          "replacementBody": {
+            "token": "<jwt>",
+            "user": {
+              "id": 3,
+              "email": "bob@example.com",
+              "name": "bob",
+              "role": "customer"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: no auth",
+          "request": "POST /api/orders",
+          "original": 401,
+          "replacement": 401,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Missing or invalid Authorization header"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: items missing",
+          "request": "POST /api/orders",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items",
+                  "message": "must be an array"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items",
+                  "message": "must be an array"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: empty items",
+          "request": "POST /api/orders",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items",
+                  "message": "must contain between 1 and 20 entries"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items",
+                  "message": "must contain between 1 and 20 entries"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: bad lines",
+          "request": "POST /api/orders",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items[0].productId",
+                  "message": "must be between 1 and 2147483647"
+                },
+                {
+                  "field": "items[0].quantity",
+                  "message": "must be between 1 and 1000"
+                },
+                {
+                  "field": "items[1]",
+                  "message": "must be an object"
+                },
+                {
+                  "field": "items[2].productId",
+                  "message": "must be an integer"
+                },
+                {
+                  "field": "items[2].quantity",
+                  "message": "is required"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items[0].productId",
+                  "message": "must be between 1 and 2147483647"
+                },
+                {
+                  "field": "items[0].quantity",
+                  "message": "must be between 1 and 1000"
+                },
+                {
+                  "field": "items[1]",
+                  "message": "must be an object"
+                },
+                {
+                  "field": "items[2].productId",
+                  "message": "must be an integer"
+                },
+                {
+                  "field": "items[2].quantity",
+                  "message": "is required"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: duplicate product lines",
+          "request": "POST /api/orders",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items[1].productId",
+                  "message": "must be unique"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "items[1].productId",
+                  "message": "must be unique"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: unknown product",
+          "request": "POST /api/orders",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product 999 not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Product 999 not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: ok (two lines)",
+          "request": "POST /api/orders",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: insufficient stock",
+          "request": "POST /api/orders",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 3,
+                  "requested": 16,
+                  "available": 15
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 3,
+                  "requested": 16,
+                  "available": 15
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: rollback on 2nd line (product 1 must be untouched)",
+          "request": "POST /api/orders",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 3,
+                  "requested": 16,
+                  "available": 15
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 3,
+                  "requested": 16,
+                  "available": 15
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "product 1 stock after rollback",
+          "request": "GET /api/products/1",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 49,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 1,
+            "sku": "KB-001",
+            "name": "Mechanical Keyboard",
+            "description": "Tenkeyless, brown switches",
+            "priceCents": 8999,
+            "stock": 49,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: for bob",
+          "request": "POST /api/orders",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 5,
+            "userId": 3,
+            "status": "pending",
+            "totalCents": 15000,
+            "items": [
+              {
+                "productId": 5,
+                "quantity": 10,
+                "unitPriceCents": 1500
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 5,
+            "userId": 3,
+            "status": "pending",
+            "totalCents": 15000,
+            "items": [
+              {
+                "productId": 5,
+                "quantity": 10,
+                "unitPriceCents": 1500
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "create: sold out",
+          "request": "POST /api/orders",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 5,
+                  "requested": 1,
+                  "available": 0
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 5,
+                  "requested": 1,
+                  "available": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get own order",
+          "request": "GET /api/orders/1",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get another user's order",
+          "request": "GET /api/orders/2",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "admin gets any order",
+          "request": "GET /api/orders/2",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "pending",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "get missing order",
+          "request": "GET /api/orders/999",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "list own orders",
+          "request": "GET /api/orders",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "items": [
+              {
+                "id": 2,
+                "userId": 2,
+                "status": "pending",
+                "totalCents": 15997,
+                "items": [
+                  {
+                    "productId": 1,
+                    "quantity": 1,
+                    "unitPriceCents": 8999
+                  },
+                  {
+                    "productId": 2,
+                    "quantity": 2,
+                    "unitPriceCents": 3499
+                  }
+                ],
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          },
+          "replacementBody": {
+            "items": [
+              {
+                "id": 2,
+                "userId": 2,
+                "status": "pending",
+                "totalCents": 15997,
+                "items": [
+                  {
+                    "productId": 1,
+                    "quantity": 1,
+                    "unitPriceCents": 8999
+                  },
+                  {
+                    "productId": 2,
+                    "quantity": 2,
+                    "unitPriceCents": 3499
+                  }
+                ],
+                "createdAt": "<timestamp>",
+                "updatedAt": "<timestamp>"
+              }
+            ],
+            "page": 1,
+            "pageSize": 20,
+            "total": 1
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "list: invalid paging",
+          "request": "GET /api/orders?pageSize=0",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "pageSize",
+                  "message": "must be between 1 and 100"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "pageSize",
+                  "message": "must be between 1 and 100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: validation",
+          "request": "POST /api/orders/1/pay",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "cardToken",
+                  "message": "is required"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "cardToken",
+                  "message": "is required"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: declined",
+          "request": "POST /api/orders/1/pay",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: other user's order",
+          "request": "POST /api/orders/2/pay",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "paid",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 2,
+            "userId": 2,
+            "status": "paid",
+            "totalCents": 15997,
+            "items": [
+              {
+                "productId": 1,
+                "quantity": 1,
+                "unitPriceCents": 8999
+              },
+              {
+                "productId": 2,
+                "quantity": 2,
+                "unitPriceCents": 3499
+              }
+            ],
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: ok",
+          "request": "POST /api/orders/1/pay",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: twice",
+          "request": "POST /api/orders/1/pay",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "cancel: paid order",
+          "request": "POST /api/orders/1/cancel",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "cancel: pending order restocks",
+          "request": "POST /api/orders/2/cancel",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "mug stock restored",
+          "request": "GET /api/products/5",
+          "original": 200,
+          "replacement": 200,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 5,
+            "sku": "LM-005",
+            "name": "Limited Edition Mug",
+            "description": "Only 10 exist (concurrency demo)",
+            "priceCents": 1500,
+            "stock": 0,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          },
+          "replacementBody": {
+            "id": 5,
+            "sku": "LM-005",
+            "name": "Limited Edition Mug",
+            "description": "Only 10 exist (concurrency demo)",
+            "priceCents": 1500,
+            "stock": 0,
+            "active": true,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "cancel: twice",
+          "request": "POST /api/orders/2/cancel",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "pay: cancelled order",
+          "request": "POST /api/orders/2/pay",
+          "original": 404,
+          "replacement": 404,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Order not found"
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "bob buys again after restock",
+          "request": "POST /api/orders",
+          "original": 409,
+          "replacement": 409,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 5,
+                  "requested": 3,
+                  "available": 0
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "INSUFFICIENT_STOCK",
+              "message": "Insufficient stock",
+              "details": [
+                {
+                  "productId": 5,
+                  "requested": 3,
+                  "available": 0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "dbDiff": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "migration-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node verify.mjs",
+    "concurrency": "node concurrency.mjs"
+  },
+  "dependencies": {
+    "mongodb": "^6.12.0"
+  }
+}

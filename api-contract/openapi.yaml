@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Inventory & Order API
+  version: 1.0.0
+  description: >
+    The contract both backends implement. The Node/Express implementation is the original; the Rust/Axum
+    implementation is the replacement. migration-tests/ proves they are observably identical.
+servers:
+  - url: http://localhost:8080
+    description: Gateway (routes to Node or Rust)
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer, bearerFormat: JWT }
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            details: { type: array, items: { type: object } }
+    User: { type: object, properties: { id: {type: integer}, email: {type: string}, name: {type: string}, role: {type: string, enum: [customer, admin]} } }
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        sku: { type: string, maxLength: 64 }
+        name: { type: string, maxLength: 200 }
+        description: { type: string, maxLength: 2000 }
+        priceCents: { type: integer, minimum: 0 }
+        stock: { type: integer, minimum: 0 }
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    OrderLine: { type: object, properties: { productId: {type: integer}, quantity: {type: integer}, unitPriceCents: {type: integer} } }
+    Order:
+      type: object
+      properties:
+        id: { type: integer }
+        userId: { type: integer }
+        status: { type: string, enum: [pending, paid, cancelled] }
+        totalCents: { type: integer }
+        items: { type: array, items: { $ref: '#/components/schemas/OrderLine' } }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    Page: { type: object, properties: { page: {type: integer}, pageSize: {type: integer}, total: {type: integer} } }
+  responses:
+    Validation: { description: VALIDATION_ERROR, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    Unauthorized: { description: UNAUTHORIZED, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    NotFound: { description: NOT_FOUND, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    Conflict: { description: "EMAIL_TAKEN | SKU_TAKEN | INSUFFICIENT_STOCK | INVALID_STATE", content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+paths:
+  /health: { get: { summary: Liveness, responses: { '200': { description: '{status: ok}' } } } }
+  /ready: { get: { summary: Readiness (pings MongoDB), responses: { '200': { description: ready }, '503': { description: unavailable } } } }
+  /api/auth/register:
+    post:
+      summary: Register (the ADMIN_EMAIL address receives the admin role)
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [email, password, name], properties: { email: {type: string}, password: {type: string, minLength: 8, maxLength: 72}, name: {type: string, maxLength: 100} } } } } }
+      responses: { '201': { description: created, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }, '400': { $ref: '#/components/responses/Validation' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /api/auth/login:
+    post:
+      summary: Login, returns an HS256 JWT valid for one hour
+      responses: { '200': { description: "{token, user}" }, '400': { $ref: '#/components/responses/Validation' }, '401': { $ref: '#/components/responses/Unauthorized' } }
+  /api/me: { get: { security: [{ bearer: [] }], responses: { '200': { description: current user }, '401': { $ref: '#/components/responses/Unauthorized' } } } }
+  /api/products:
+    get:
+      summary: List active products
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { name: search, in: query, description: case-insensitive substring of name or sku, schema: { type: string, maxLength: 100 } }
+        - { name: minPrice, in: query, schema: { type: integer } }
+        - { name: maxPrice, in: query, schema: { type: integer } }
+        - { name: sort, in: query, schema: { type: string, enum: [id, newest, name, price_asc, price_desc], default: id } }
+      responses: { '200': { description: "{items, page, pageSize, total}" }, '400': { $ref: '#/components/responses/Validation' } }
+    post:
+      summary: Create product (admin)
+      security: [{ bearer: [] }]
+      responses: { '201': { description: created }, '400': { $ref: '#/components/responses/Validation' }, '401': { $ref: '#/components/responses/Unauthorized' }, '403': { description: FORBIDDEN }, '409': { $ref: '#/components/responses/Conflict' } }
+  /api/products/{id}:
+    parameters: [ { name: id, in: path, required: true, schema: { type: integer } } ]
+    get: { responses: { '200': { description: product }, '400': { $ref: '#/components/responses/Validation' }, '404': { $ref: '#/components/responses/NotFound' } } }
+    put: { summary: Partial update (admin), security: [{ bearer: [] }], responses: { '200': { description: updated }, '404': { $ref: '#/components/responses/NotFound' } } }
+    delete: { summary: Soft delete (admin), security: [{ bearer: [] }], responses: { '204': { description: deleted }, '404': { $ref: '#/components/responses/NotFound' } } }
+  /api/products/{id}/stock:
+    patch: { summary: "Adjust stock by delta (admin); never below zero", security: [{ bearer: [] }], responses: { '200': { description: updated }, '409': { $ref: '#/components/responses/Conflict' } } }
+  /api/orders:
+    get: { summary: List own orders, security: [{ bearer: [] }], responses: { '200': { description: "{items, page, pageSize, total}" } } }
+    post:
+      summary: Create order. Atomic across all lines (multi-document transaction); 409 INSUFFICIENT_STOCK leaves stock untouched.
+      security: [{ bearer: [] }]
+      responses: { '201': { description: created }, '400': { $ref: '#/components/responses/Validation' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /api/orders/{id}: { get: { security: [{ bearer: [] }], parameters: [ { name: id, in: path, required: true, schema: { type: integer } } ], responses: { '200': { description: order }, '404': { $ref: '#/components/responses/NotFound' } } } }
+  /api/orders/{id}/pay:
+    post: { summary: "Simulated payment; cardToken tok_decline gives 402 PAYMENT_DECLINED", security: [{ bearer: [] }], parameters: [ { name: id, in: path, required: true, schema: { type: integer } } ], responses: { '200': { description: paid }, '402': { description: PAYMENT_DECLINED }, '409': { $ref: '#/components/responses/Conflict' } } }
+  /api/orders/{id}/cancel:
+    post: { summary: Cancel a pending order and restock, security: [{ bearer: [] }], parameters: [ { name: id, in: path, required: true, schema: { type: integer } } ], responses: { '200': { description: cancelled }, '409': { $ref: '#/components/responses/Conflict' } } }

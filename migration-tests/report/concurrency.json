@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-11-19T01:48:48.737Z",
+  "customers": 100,
+  "stock": 10,
+  "pass": true,
+  "results": [
+    {
+      "backend": "node",
+      "created201": 10,
+      "conflicts409": 90,
+      "other": 0,
+      "finalStock": 0,
+      "persistedOrders": 10,
+      "distinctOrderIds": 10,
+      "badConflicts": 0,
+      "elapsedMs": 727,
+      "mixedOrderOk": 40,
+      "mixedStockConsistent": true
+    },
+    {
+      "backend": "rust",
+      "created201": 10,
+      "conflicts409": 90,
+      "other": 0,
+      "finalStock": 0,
+      "persistedOrders": 10,
+      "distinctOrderIds": 10,
+      "badConflicts": 0,
+      "elapsedMs": 310,
+      "mixedOrderOk": 40,
+      "mixedStockConsistent": true
+    }
+  ]
+}
