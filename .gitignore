@@ -6,3 +6,4 @@ target/
 *.log
 benchmarks/results/*.tmp
 backend-rust/bin/
+.iptrust/
