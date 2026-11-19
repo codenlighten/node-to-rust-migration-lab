@@ -16,6 +16,14 @@ jobs:
       - name: Rust unit tests (same shared vectors)
         working-directory: backend-rust
         run: cargo test --locked
+  frontend-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Typecheck and build the dashboard
+        working-directory: frontend
+        run: npm ci && npm run build
   verify-migration:
     runs-on: ubuntu-latest
     timeout-minutes: 40
