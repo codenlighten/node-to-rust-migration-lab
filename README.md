@@ -57,10 +57,12 @@ and fixed during development.
 
 ## Measured performance (summary)
 
-On a quiet, pinned laptop (E-cores only, 5 alternating rounds, one core per server) Rust served more requests per second than Node in
-all six scenarios: about 2-3x on DB-backed endpoints, about 7x on framework-only requests, and only **1.15x on bcrypt login** (the hash
-dominates); roughly 6-7x less memory. These are results at one load on one machine, not capacity limits; the load generator may have limited the
-fastest numbers, and the report lists what was not tested. Full method, ranges, thermal logs and caveats:
+On a quiet, pinned laptop (E-cores only, 5 alternating rounds per run), Rust served more requests per second than Node in all six scenarios in
+all three configurations, but **how much depends on how Node is run**. Against Node in cluster mode on the same two cores: about 1.2-1.7x on
+database reads, about 2.8x on transactional order writes (a contention stress test), and about 15 MB of memory against about 290 MB. Against a
+single-process Node the database-read lead looks like 2-3x, because Node leaves a core idle. **bcrypt is a tie**: on one core native Node
+`bcrypt` hashes faster (49 ms) than Rust's crate (56 ms). These are results at one load on one machine, not capacity limits: the load generator
+or MongoDB limited the fastest Rust numbers. Full method, ranges, thermal logs and caveats:
 [docs/performance-report.md](docs/performance-report.md).
 
 ## Layout

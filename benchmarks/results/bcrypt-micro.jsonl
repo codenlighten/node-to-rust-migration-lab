@@ -1,0 +1,3 @@
+{"impl":"node bcryptjs (pure JS, used by this repo)","n":40,"hashMsMedian":65.06,"hashMsMin":64.49,"hashMsMax":66.35,"verifyMsMedian":65.59}
+{"impl":"node bcrypt (native addon)","n":40,"hashMsMedian":49.14,"hashMsMin":47.36,"hashMsMax":49.29,"verifyMsMedian":49.21}
+{"impl":"rust bcrypt crate","n":40,"hashMsMedian":55.62,"hashMsMin":55.61,"hashMsMax":55.83,"verifyMsMedian":55.63}

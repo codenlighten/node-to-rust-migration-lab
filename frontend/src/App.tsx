@@ -104,12 +104,12 @@ function Orders({ signedIn }: { signedIn: boolean }) {
 
 function Dashboard() {
   const [gw, setGw] = useState<Gw | null>(null);
-  const [ver, setVer] = useState<any>(null); const [conc, setConc] = useState<any>(null); const [bench, setBench] = useState<{ a: any; b: any } | null>(null);
+  const [ver, setVer] = useState<any>(null); const [conc, setConc] = useState<any>(null); const [bench, setBench] = useState<{ a: any; b: any; c: any } | null>(null);
   const refresh = useCallback(async () => { try { setGw(await (await fetch("/__gateway/status")).json()); } catch { setGw(null); } }, []);
   useEffect(() => { refresh(); const t = setInterval(refresh, 2000); return () => clearInterval(t); }, [refresh]);
   useEffect(() => {
     const get = (u: string, set: (v: any) => void) => fetch(u).then((r) => (r.ok ? r.json() : null)).then(set).catch(() => set(null));
-    get("/reports/verification.json", setVer); get("/reports/concurrency.json", setConc); Promise.all([fetch("/benchmarks/run-A-two-cores.json"), fetch("/benchmarks/run-B-one-core.json")]).then(async ([a, b]) => setBench(a.ok && b.ok ? { a: await a.json(), b: await b.json() } : null)).catch(() => setBench(null));
+    get("/reports/verification.json", setVer); get("/reports/concurrency.json", setConc); Promise.all(["A-two-cores", "B-one-core", "C-node-cluster"].map((n) => fetch(`/benchmarks/run-${n}.json`))).then(async ([a, b, c]) => setBench(a.ok && b.ok && c.ok ? { a: await a.json(), b: await b.json(), c: await c.json() } : null)).catch(() => setBench(null));
   }, []);
   const route = async (mode: string, extra: object = {}) => { await fetch("/__gateway/route", { method: "POST", body: JSON.stringify({ mode, ...extra }) }); refresh(); };
   return <section className="dash">
@@ -132,9 +132,10 @@ function Dashboard() {
 
     <h2>Benchmarks</h2>
     {bench ? <>
+      <BenchTable title="Run C: Node cluster (2 workers) vs Rust on the same 2 cores (fairest multi-core comparison)" d={bench.c} />
       <BenchTable title="Run B: one core per server (per-core comparison)" d={bench.b} />
       <BenchTable title="Run A: two cores shared with MongoDB" d={bench.a} />
-      <p className="muted">Saved results from a reproducible script run outside the dashboard (<code>benchmarks/benchmark.mjs</code>), median of {bench.b.environment.rounds} alternating rounds of {bench.b.environment.durationSec} s. Ranges are min-max. These are results at one offered load on one machine, not capacity limits: see docs/performance-report.md.</p>
+      <p className="muted">Saved results from a reproducible script run outside the dashboard (<code>benchmarks/benchmark.mjs</code>), median of alternating rounds (5 per run). bcrypt microbenchmark, one core: native Node 49 ms, Rust 56 ms, pure-JS 65 ms per hash. Ranges are min-max. These are results at one offered load on one machine, not capacity limits: see docs/performance-report.md.</p>
     </> : <p>No benchmark results saved yet. Official numbers are produced outside the dashboard.</p>}
   </section>;
 }
