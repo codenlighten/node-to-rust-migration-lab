@@ -36,6 +36,13 @@ make verify-migration   # contract + concurrency verification on isolated databa
 make benchmark          # see benchmarks/README.md; published results in docs/performance-report.md
 ```
 
+![Dashboard: gateway routing, verification results and measured benchmarks](docs/img/dashboard.png)
+
+*The dashboard against the live stack: the gateway has just rolled traffic back to Node after the Rust container was stopped, then routed
+to Rust again. Verification and benchmark panels show the saved results from this repo's own runs; nothing is hard-coded.*
+
+![Shop: the unchanged frontend served by whichever backend the gateway selects](docs/img/shop.png)
+
 ## What the verification does (and does not) show
 
 `migration-tests/verify.mjs` runs the same request fixtures against both backends, each on its **own identically seeded

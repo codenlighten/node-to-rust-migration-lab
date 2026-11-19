@@ -8,7 +8,10 @@ type Gw = { mode: "node" | "rust" | "canary"; canaryPercent: number; health: Rec
 const money = (c: number) => `$${(c / 100).toFixed(2)}`;
 
 export function App() {
-  const [tab, setTab] = useState<"shop" | "orders" | "dashboard">("shop");
+  type Tab = "shop" | "orders" | "dashboard";
+  const fromHash = (): Tab => { const h = window.location.hash.slice(1); return h === "orders" || h === "dashboard" ? h : "shop"; };
+  const [tab, setTabState] = useState<Tab>(fromHash);
+  const setTab = (t: Tab) => { setTabState(t); try { window.history.replaceState(null, "", `#${t}`); } catch { /* ignore */ } };
   const [log, setLog] = useState<LogEntry[]>([]);
   const [me, setMe] = useState<{ email: string; role: string } | null>(null);
   useEffect(() => onRequest((e) => setLog((l) => [e, ...l].slice(0, 30))), []);
@@ -122,8 +125,8 @@ function Dashboard() {
     </> : <p className="err">Gateway not reachable.</p>}
 
     <h2>Compatibility verification</h2>
-    {ver ? <><p className={ver.verified ? "ok" : "err"}><b>{ver.verified ? "VERIFIED" : "FAILED"}</b>: {ver.passed}/{ver.total} scenarios identical, generated {ver.generatedAt}</p>
-      <table><tbody>{ver.groups.map((g: any) => <tr key={g.group}><td>{g.group}</td><td>{g.steps.filter((s: any) => s.pass).length}/{g.steps.length} identical</td><td>DB state {g.dbDiff.length ? "differs" : "identical"}</td></tr>)}</tbody></table></>
+    {ver ? <><p className={ver.verified ? "ok" : "err"}><b>{ver.verified ? "VERIFIED" : "FAILED"}</b>: {ver.passed - (ver.knownDifferences ?? 0)} of {ver.total} scenarios identical{ver.knownDifferences ? `, ${ver.knownDifferences} documented known differences (JSON-parser edge cases)` : ""}; generated {ver.generatedAt}</p>
+      <table><tbody>{ver.groups.map((g: any) => <tr key={g.group}><td>{g.group}</td><td>{g.steps.filter((s: any) => s.pass && !s.knownDiff).length}/{g.steps.length} identical{g.steps.some((s: any) => s.knownDiff) ? ` (+${g.steps.filter((s: any) => s.knownDiff).length} known difference)` : ""}</td><td>DB state {g.dbDiff.length ? "differs" : "identical"}</td></tr>)}</tbody></table></>
       : <p>No report yet. Run <code>make verify-migration</code>; this panel shows the saved result, never a hard-coded one.</p>}
     {conc && <p className={conc.pass ? "ok" : "err"}>Concurrency ({conc.customers} customers, {conc.stock} units): <b>{conc.pass ? "PASS" : "FAIL"}</b> — {conc.results.map((r: any) => `${r.backend}: ${r.created201}×201, ${r.conflicts409}×409, stock ${r.finalStock}`).join(" | ")}</p>}
 
