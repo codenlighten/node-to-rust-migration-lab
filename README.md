@@ -1,5 +1,7 @@
 # node-to-rust-migration-lab
 
+[![ci](https://github.com/codenlighten/node-to-rust-migration-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/codenlighten/node-to-rust-migration-lab/actions/workflows/ci.yml)
+
 A worked example of replacing a live Node.js backend with Rust **without breaking anything**: the same REST API, the same
 MongoDB data, the same React frontend (no rebuild), a gateway that moves traffic between the two implementations and rolls back
 automatically, and a verification harness that compares what the two backends *actually do*.

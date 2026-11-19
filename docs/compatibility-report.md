@@ -17,6 +17,9 @@ identically seeded). Re-generate with `make verify-migration`.
 "Identical" means identical status code, content-type media type, JSON body (after masking only timestamps and JWTs) and
 database state. This is **parity on a reviewable fixture set**, not a proof of equivalence.
 
+The same result was reproduced independently on a GitHub Actions runner from a clean checkout (`make verify-migration`: 156 identical, 2 known
+differences, 0 unexpected mismatches; oversell test passes on both backends).
+
 ## What the harness found while this repo was built
 
 Real differences, each discovered by a fixture and then fixed or recorded:
