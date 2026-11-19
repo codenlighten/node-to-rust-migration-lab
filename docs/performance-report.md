@@ -1,7 +1,7 @@
 # Performance report
 
-Measured, not assumed. Raw data: `benchmarks/results/run-A-two-cores.json`, `run-B-one-core.json`, `run-C-node-cluster.json`, `bcrypt-micro.jsonl` and the
-thermal/clock logs `guard-A.log`, `guard-B.log`, `guard-C.log`. CPU percentages in the tables are of **one core** (200% = two cores busy). Method and caveats are part of the result; read them before quoting a number.
+Measured, not assumed. Raw data: `benchmarks/results/run-A-two-cores.json`, `run-B-one-core.json`, `run-C-node-cluster.json`, `sweep-D.json`,
+`bcrypt-micro.jsonl` and the thermal/clock logs `guard-A.log` ... `guard-D.log`. CPU percentages in the tables are of **one core** (200% = two cores busy). Method and caveats are part of the result; read them before quoting a number.
 
 ## Setup
 
@@ -19,6 +19,51 @@ thermal/clock logs `guard-A.log`, `guard-B.log`, `guard-C.log`. CPU percentages 
   generator on CPU 15, 5 rounds of 12 s, same guard. Run C is the most directly comparable two-server-core configuration here, since Node uses
   both cores. It also differs from A/B in MongoDB and generator placement, duration and co-tenant status, so the change in ratios cannot be
   attributed to clustering alone. In A and B the generator ran on CPU 14. Run C used `bcryptjs` like the others.
+
+## Run D: load sweep with per-component CPU (a different, larger machine)
+
+Purpose: find what limited the Rust numbers in runs A-C. Host: AMD Ryzen 7 260 (8 cores, 2 threads each; governor performance, boost on, median
+4,963 MHz on the used CPUs, Tctl 34-67 C, fans 2,300-3,100 RPM, no aborts, 242 guard samples). Layout by physical core: servers (Node
+cluster of 2 workers, then Rust, never together) on 2 cores = 4 hardware threads; MongoDB on 2 cores = 4 threads; load generator (autocannon, 5 worker
+threads) on 3 cores = 6 threads; one core left to the OS. Co-tenants: a desktop file indexer and a low-priority upload. Offered concurrency 8-256
+connections, 10 s per point, 3 alternating rounds, code version `92b87b4`. "Cores" below are CPU-seconds per second summed over a component's threads
+(4.0 = all four of its hardware threads busy). These are logical-CPU times, not physical-core-equivalent work: two SMT threads sharing a core each get less than a full core.
+
+| Endpoint | Connections | Node req/s | Rust req/s | Rust / Node | Node server | Rust server | Node mongod | Rust mongod | Generator (Node / Rust) |
+|---|---|---|---|---|---|---|---|---|---|
+| GET /api/products/1 | 8 | 7,338 | 19,832 | 2.70x | 2.20 | 1.78 | 0.82 | 2.20 | 0.42 / 0.74 |
+| GET /api/products/1 | 16 | 7,449 | 32,746 | 4.40x | 2.32 | 2.74 | 0.86 | 3.66 | 0.42 / 1.07 |
+| GET /api/products/1 | 32 | 7,548 | 33,161 | 4.39x | 2.33 | 2.80 | 0.91 | 3.77 | 0.44 / 1.09 |
+| GET /api/products/1 | 256 | 7,017 | 32,518 | 4.63x | 2.41 | 3.08 | 0.90 | 3.81 | 0.44 / 1.18 |
+| GET /api/products?pageSize=100 | 8 | 4,769 | 10,507 | 2.20x | 2.34 | 2.00 | 1.16 | 2.42 | 0.38 / 0.48 |
+| GET /api/products?pageSize=100 | 16 | 4,602 | 16,683 | 3.63x | 2.39 | 3.15 | 1.17 | 3.80 | 0.38 / 0.65 |
+| GET /api/products?pageSize=100 | 32 | 4,509 | 16,408 | 3.64x | 2.37 | 3.13 | 1.24 | 3.81 | 0.39 / 0.66 |
+| GET /api/products?pageSize=100 | 256 | 3,798 | 15,722 | 4.14x | 2.61 | 3.35 | 1.01 | 3.80 | 0.38 / 0.70 |
+
+CPU cost per request (CPU time of each component divided by requests served):
+
+| Endpoint (32 connections) | Node server | Rust server | Node / Rust | Node mongod | Rust mongod |
+|---|---|---|---|---|---|
+| GET /api/products/1 | 0.31 ms | 0.08 ms | 3.7x | 0.12 ms | 0.11 ms |
+| GET /api/products?pageSize=100 | 0.53 ms | 0.19 ms | 2.8x | 0.27 ms | 0.23 ms |
+
+Findings:
+
+* **Node is limited by its own CPU.** Its two workers saturate from the first step (7.3-7.5k req/s on the point read from 8 connections upward, server at
+  2.2-2.4 cores while MongoDB used under 1 and the generator under 0.5); more connections only add queueing delay (p99 1 -> 49 ms on the point read).
+* **Rust's throughput plateaus at about 32.5k (point read) and 16k (list) req/s from 16 connections upward.** At the plateau MongoDB was at 3.7-3.8 of its 4
+  threads, the Rust server at 2.8-3.4 of 4, and the generator at about 1.1-1.2 of 6 in aggregate. MongoDB is the busiest component and a plausible limiter, and
+  the Rust server is also close to its allotment; neither MongoDB nor the generator (whose individual worker threads were not measured) was isolated as the
+  limiting component. Giving MongoDB more cores would resolve it; that was not done.
+* **Why runs A-C probably understated Rust.** In run C, MongoDB had one core and the generator one thread, and Rust reached only about 5,300 req/s while using
+  under one core: that suggests a constraint outside the Rust server but does not identify it. With a larger database tier and a multi-threaded generator,
+  the same two-core Node cluster is outrun by **4.4x-4.6x** (point read) and **3.6x-4.1x** (list) at 16-256 connections (2.7x and 2.2x at 8 connections,
+  before Node saturates). Run C's 1.2-1.7x on those routes should be read as a figure limited by that rig, not as a general Rust lead.
+* **Server CPU per request** was about 3.6x higher for Node on the point read and 2.8-3.2x on the list. MongoDB's CPU per request was nearly the same for both
+  backends (about 0.12 ms on the point read), which supports the claim that they do the same database work. These are logical-CPU times in this SMT
+  configuration: both the milliseconds and their ratios are specific to it, because SMT contention may differ between the two backends' load.
+* **Different machine, different ratios.** Absolute throughput differs substantially by host and backend (at 32 connections Rust's point-read rate here is about
+  6x run C's), and the ratios differ by rig; do not mix runs into one table.
 
 ## Run C: Node cluster (2 workers) vs Rust, same 2 cores
 
@@ -64,8 +109,8 @@ Memory (resident set): idle 85 MB (Node) vs 10 MB (Rust); after the load 101-103
   requests per second than Node in all six scenarios in every run; within each run the min-max ranges do not overlap. That describes
   these short measurements; it is not a confidence interval and has not been repeated on another day or machine. Zero request errors.
 * **The size of the advantage depends on how Node is run.** Against a single-process Node (runs A and B) Rust led by 1.85-3.37x on the three database **read**
-  endpoints. Against Node in cluster mode on the same two cores (run C) it led by **1.16-1.67x** on those same reads: point read 1.67x,
-  JSON list 1.32x, regex search 1.16x. Clustering may explain part of the smaller gap (a single-process Node cannot use the second core), but run C
+  endpoints. Against Node in cluster mode on the same two cores (run C) it led by **1.16-1.67x** on those same reads on that rig: point read 1.67x,
+  JSON list 1.32x, regex search 1.16x; but run D, with more MongoDB and generator capacity than run C, found larger read ratios (3.6-4.6x at 16-256 connections); its limiting component was not confirmed. Clustering may explain part of the smaller gap (a single-process Node cannot use the second core), but run C
   also changed other conditions, so the split is not measured.
 * **Framework-only requests** (`/health`): about 4.3x in run C, 7.5x per core. Rust returned ~44-47,000 req/s in every run while using under
   one core of CPU and with no MongoDB involved. The limiting component was not identified (the single-threaded load generator is a candidate), so
@@ -78,10 +123,9 @@ Memory (resident set): idle 85 MB (Node) vs 10 MB (Rust); after the load 101-103
 * **Memory:** in summed process RSS, Rust used about 15 MB under load against about 101-103 MB for single-process Node and 276-298 MB for the
   two-worker cluster (about 7x and 18-20x). Idle: 10 MB vs 85 MB (single process, runs A/B) and 250 MB (cluster, run C). Summed RSS can double-count
   shared pages, so these are not measurements of physical memory.
-* **These are results at a given load, not capacity limits.** On database reads Rust used only 0.56-0.77 of a core (of the two available) in run C and returned
-  about the same ~5,300 req/s for the point read on one core (run B) as on two (run C). These tests did not establish Rust's maximum throughput or
-  identify the limiting component (MongoDB on one core, the load generator, or a serial part of the server are all candidates). A load sweep
-  with generator and MongoDB utilization measured would be needed.
+* **Runs A-C did not measure Rust's capacity; run D shows an observed system plateau, not a Rust-only ceiling.** In runs A-C Rust used 0.47-0.82 of a core on reads
+  and returned the same point-read throughput on one core as on two, which suggests a constraint outside the Rust server. Run D found the plateau with MongoDB at
+  3.7-3.8 of its 4 threads; Rust's server-only capacity remains unmeasured.
 
 ### bcrypt microbenchmark (one pinned core, cost 10, same password, 40 hashes after warm-up)
 
@@ -98,7 +142,7 @@ than Rust). Language is not what decides bcrypt speed; the implementation is. In
 ## What it does not show
 
 * Not measured: cold start, a mixed read/write workload, long soak runs and garbage-collection effects, other MongoDB settings, more than two
-  server cores, network latency between tiers, a load generator fast enough to find Rust's ceiling.
+  server cores, network latency between tiers, a test that isolates Rust's server-only capacity (for example by giving MongoDB more cores).
 * Node cluster mode was tested in run C (with `bcryptjs`); native bcrypt only in the single-core microbenchmark. A Node setup tuned beyond that (more workers than cores, a
   different HTTP server, native addons elsewhere) was not tried.
 * Absolute numbers are specific to this machine, this load generator and these container limits. The ratios compare these two implementations
