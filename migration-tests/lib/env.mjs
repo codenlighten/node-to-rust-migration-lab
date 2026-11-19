@@ -1,5 +1,10 @@
 // Shared configuration + helpers for the verification harness.
 import { MongoClient } from "mongodb";
+import { Agent, setGlobalDispatcher } from "undici";
+
+// The harness sleeps between steps (database resets) and the servers close idle keep-alive sockets on their
+// own schedule; reusing a socket the server just closed shows up as "fetch failed: EPIPE". Drop idle sockets quickly.
+setGlobalDispatcher(new Agent({ keepAliveTimeout: 300, keepAliveMaxTimeout: 300 }));
 
 export const cfg = {
   mongoUrl: process.env.MONGO_URL ?? "mongodb://localhost:27017/?replicaSet=rs0",
