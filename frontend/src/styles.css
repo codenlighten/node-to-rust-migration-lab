@@ -18,3 +18,4 @@ pre { background:var(--panel); border:1px solid var(--line); border-radius:6px; 
 footer { position:fixed; left:0; right:0; bottom:0; background:var(--panel); border-top:1px solid var(--line); padding:8px 16px; font-size:12px; }
 .tag { font-weight:600; width:60px; } .tag.node { color:#68a063; } .tag.rust { color:var(--accent); }
 @media (max-width: 600px) { .app { padding:12px 16px 160px; } }
+.muted { color: var(--muted); font-size: 12px; } h3 { font-size: 13px; margin: 14px 0 4px; }

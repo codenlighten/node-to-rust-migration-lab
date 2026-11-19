@@ -31,7 +31,7 @@ docker compose up --build        # needs only Docker
 
 ```bash
 make verify-migration   # contract + concurrency verification on isolated databases; reports in migration-tests/report/
-make benchmark          # see benchmarks/README.md
+make benchmark          # see benchmarks/README.md; published results in docs/performance-report.md
 ```
 
 ## What the verification does (and does not) show
@@ -45,6 +45,14 @@ that users, tokens and orders written by one backend work in the other and that 
 It demonstrates **parity on a fixed, reviewable fixture set**, not mathematical equivalence. See
 [docs/compatibility-report.md](docs/compatibility-report.md) for what it catches, what it cannot, and the real differences it found
 and fixed during development.
+
+## Measured performance (summary)
+
+On a quiet, pinned laptop (E-cores only, 5 alternating rounds, one core per server) Rust served more requests per second than Node in
+all six scenarios: about 2-3x on DB-backed endpoints, about 7x on framework-only requests, and only **1.15x on bcrypt login** (the hash
+dominates); roughly 6-7x less memory. These are results at one load on one machine, not capacity limits; the load generator may have limited the
+fastest numbers, and the report lists what was not tested. Full method, ranges, thermal logs and caveats:
+[docs/performance-report.md](docs/performance-report.md).
 
 ## Layout
 

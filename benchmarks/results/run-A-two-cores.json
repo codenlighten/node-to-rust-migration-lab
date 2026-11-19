@@ -1,0 +1,903 @@
+{
+  "environment": {
+    "generatedAt": "2026-11-19T02:30:12.652Z",
+    "cpu": "12th Gen Intel(R) Core(TM) i7-12650H",
+    "logicalCpus": 16,
+    "totalMemGb": 31,
+    "loadavgBefore": [
+      0.95,
+      2.51,
+      3.07
+    ],
+    "loadavgAfter": [
+      12.57,
+      12.28,
+      9.07
+    ],
+    "nodeVersion": "v24.22.2",
+    "rounds": 5,
+    "durationSec": 15,
+    "connections": 32,
+    "idleRssMb": {
+      "node": 85.16015625,
+      "rust": 10.109375
+    },
+    "commit": "277b0b3 (clean tree, copied by rsync; no .git on the host)",
+    "note": "E-cores 12-14 only (max 3.5 GHz), turbo setting on, measured MHz recorded in guard.log; servers+mongo on CPUs 12-13, load generator on CPU 14; co-tenants noted separately; containers on bridge network",
+    "host": "a laptop, 12th-gen Intel i7-12650H, 31 GB, E-cores only"
+  },
+  "summary": {
+    "health": {
+      "label": "GET /health (framework overhead)",
+      "node": {
+        "rps": {
+          "median": 6423.6,
+          "min": 6389.2,
+          "max": 6634.07
+        },
+        "p50ms": {
+          "median": 4
+        },
+        "p99ms": {
+          "median": 9,
+          "max": 10
+        },
+        "rssMbAfter": 103.390625,
+        "cpuPct": 108.54934363963477,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 44434.14,
+          "min": 44357.34,
+          "max": 48709.34
+        },
+        "p50ms": {
+          "median": 0
+        },
+        "p99ms": {
+          "median": 1,
+          "max": 1
+        },
+        "rssMbAfter": 14.66796875,
+        "cpuPct": 86.17127624125295,
+        "errors": 0
+      },
+      "rustVsNodeRps": 6.92,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    },
+    "point-read": {
+      "label": "GET /api/products/1 (DB point read)",
+      "node": {
+        "rps": {
+          "median": 1790.8,
+          "min": 1698.6,
+          "max": 1822.8
+        },
+        "p50ms": {
+          "median": 16
+        },
+        "p99ms": {
+          "median": 34,
+          "max": 37
+        },
+        "rssMbAfter": 104.15234375,
+        "cpuPct": 101.93883669798123,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 6042.27,
+          "min": 5862.8,
+          "max": 6134.54
+        },
+        "p50ms": {
+          "median": 4
+        },
+        "p99ms": {
+          "median": 14,
+          "max": 15
+        },
+        "rssMbAfter": 14.68359375,
+        "cpuPct": 82.1726091302898,
+        "errors": 0
+      },
+      "rustVsNodeRps": 3.37,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    },
+    "list-json": {
+      "label": "GET /api/products?pageSize=100 (DB read + JSON)",
+      "node": {
+        "rps": {
+          "median": 963.07,
+          "min": 955.07,
+          "max": 968.4
+        },
+        "p50ms": {
+          "median": 31
+        },
+        "p99ms": {
+          "median": 61,
+          "max": 69
+        },
+        "rssMbAfter": 104.0078125,
+        "cpuPct": 88.43129414900694,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 2872.47,
+          "min": 2819.54,
+          "max": 3117.4
+        },
+        "p50ms": {
+          "median": 10
+        },
+        "p99ms": {
+          "median": 26,
+          "max": 30
+        },
+        "rssMbAfter": 14.8515625,
+        "cpuPct": 81.0234541577825,
+        "errors": 0
+      },
+      "rustVsNodeRps": 2.98,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    },
+    "search": {
+      "label": "GET /api/products?search=a (regex scan)",
+      "node": {
+        "rps": {
+          "median": 957.47,
+          "min": 953.27,
+          "max": 961.74
+        },
+        "p50ms": {
+          "median": 31
+        },
+        "p99ms": {
+          "median": 59,
+          "max": 65
+        },
+        "rssMbAfter": 104.0625,
+        "cpuPct": 83.89977342396396,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 2878.47,
+          "min": 2802.6,
+          "max": 2968.2
+        },
+        "p50ms": {
+          "median": 10
+        },
+        "p99ms": {
+          "median": 27,
+          "max": 29
+        },
+        "rssMbAfter": 14.90625,
+        "cpuPct": 69.34914396109527,
+        "errors": 0
+      },
+      "rustVsNodeRps": 3.01,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    },
+    "login-bcrypt": {
+      "label": "POST /api/auth/login (bcrypt cost 10, CPU-bound)",
+      "node": {
+        "rps": {
+          "median": 14.87,
+          "min": 14.67,
+          "max": 15.07
+        },
+        "p50ms": {
+          "median": 465
+        },
+        "p99ms": {
+          "median": 918,
+          "max": 945
+        },
+        "rssMbAfter": 96.01171875,
+        "cpuPct": 100.4864396614914,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 32.94,
+          "min": 32.47,
+          "max": 33.4
+        },
+        "p50ms": {
+          "median": 234
+        },
+        "p99ms": {
+          "median": 425,
+          "max": 486
+        },
+        "rssMbAfter": 14.9140625,
+        "cpuPct": 185.40486504498494,
+        "errors": 0
+      },
+      "rustVsNodeRps": 2.22,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    },
+    "order-write": {
+      "label": "POST /api/orders (transactional write)",
+      "node": {
+        "rps": {
+          "median": 116.27,
+          "min": 110.8,
+          "max": 118.14
+        },
+        "p50ms": {
+          "median": 86
+        },
+        "p99ms": {
+          "median": 682,
+          "max": 775
+        },
+        "rssMbAfter": 99.01953125,
+        "cpuPct": 79.4031441513457,
+        "errors": 0
+      },
+      "rust": {
+        "rps": {
+          "median": 386,
+          "min": 381.4,
+          "max": 389
+        },
+        "p50ms": {
+          "median": 18
+        },
+        "p99ms": {
+          "median": 328,
+          "max": 338
+        },
+        "rssMbAfter": 14.83984375,
+        "cpuPct": 38.1847261095563,
+        "errors": 0
+      },
+      "rustVsNodeRps": 3.32,
+      "conclusion": "Rust faster (ranges do not overlap)"
+    }
+  },
+  "raw": {
+    "health": {
+      "node": [
+        {
+          "rps": 6634.07,
+          "p50": 4,
+          "p97_5": 8,
+          "p99": 10,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 99.0234375,
+          "cpuPct": 108.44976713240185
+        },
+        {
+          "rps": 6389.2,
+          "p50": 4,
+          "p97_5": 7,
+          "p99": 8,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.390625,
+          "cpuPct": 108.74925034983669
+        },
+        {
+          "rps": 6423.6,
+          "p50": 4,
+          "p97_5": 7,
+          "p99": 9,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.6875,
+          "cpuPct": 108.54934363963477
+        },
+        {
+          "rps": 6507.6,
+          "p50": 4,
+          "p97_5": 7,
+          "p99": 8,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.30078125,
+          "cpuPct": 108.96367877374222
+        },
+        {
+          "rps": 6421.47,
+          "p50": 4,
+          "p97_5": 7,
+          "p99": 10,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.40625,
+          "cpuPct": 108.29001732640278
+        }
+      ],
+      "rust": [
+        {
+          "rps": 48355.2,
+          "p50": 0,
+          "p97_5": 1,
+          "p99": 1,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 11.859375,
+          "cpuPct": 89.4070619586942
+        },
+        {
+          "rps": 48709.34,
+          "p50": 0,
+          "p97_5": 1,
+          "p99": 1,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.65234375,
+          "cpuPct": 89.93404836453269
+        },
+        {
+          "rps": 44357.34,
+          "p50": 0,
+          "p97_5": 1,
+          "p99": 1,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.66796875,
+          "cpuPct": 86.13109512390092
+        },
+        {
+          "rps": 44391.47,
+          "p50": 0,
+          "p97_5": 1,
+          "p99": 1,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.95703125,
+          "cpuPct": 86.17127624125295
+        },
+        {
+          "rps": 44434.14,
+          "p50": 0,
+          "p97_5": 1,
+          "p99": 1,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.83984375,
+          "cpuPct": 86.08742004264404
+        }
+      ]
+    },
+    "point-read": {
+      "node": [
+        {
+          "rps": 1698.6,
+          "p50": 17,
+          "p97_5": 33,
+          "p99": 37,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 99.828125,
+          "cpuPct": 101.93883669798123
+        },
+        {
+          "rps": 1790.8,
+          "p50": 16,
+          "p97_5": 31,
+          "p99": 36,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.6796875,
+          "cpuPct": 102.01905777303925
+        },
+        {
+          "rps": 1789.54,
+          "p50": 17,
+          "p97_5": 30,
+          "p99": 34,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.15234375,
+          "cpuPct": 102.39840106595605
+        },
+        {
+          "rps": 1822.8,
+          "p50": 16,
+          "p97_5": 29,
+          "p99": 34,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.7421875,
+          "cpuPct": 100.01999067102014
+        },
+        {
+          "rps": 1822.74,
+          "p50": 16,
+          "p97_5": 28,
+          "p99": 33,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 105.30859375,
+          "cpuPct": 100.76641119626795
+        }
+      ],
+      "rust": [
+        {
+          "rps": 5929.74,
+          "p50": 5,
+          "p97_5": 12,
+          "p99": 14,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 13.73046875,
+          "cpuPct": 83.41661669664867
+        },
+        {
+          "rps": 6091.87,
+          "p50": 4,
+          "p97_5": 12,
+          "p99": 14,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.68359375,
+          "cpuPct": 82.15618336886993
+        },
+        {
+          "rps": 6042.27,
+          "p50": 4,
+          "p97_5": 12,
+          "p99": 15,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.671875,
+          "cpuPct": 83.94963022186684
+        },
+        {
+          "rps": 6134.54,
+          "p50": 4,
+          "p97_5": 12,
+          "p99": 14,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.96875,
+          "cpuPct": 81.37829912023446
+        },
+        {
+          "rps": 5862.8,
+          "p50": 5,
+          "p97_5": 12,
+          "p99": 15,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.84765625,
+          "cpuPct": 82.1726091302898
+        }
+      ]
+    },
+    "list-json": {
+      "node": [
+        {
+          "rps": 966.87,
+          "p50": 31,
+          "p97_5": 55,
+          "p99": 61,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.1875,
+          "cpuPct": 89.20719520319787
+        },
+        {
+          "rps": 961.67,
+          "p50": 31,
+          "p97_5": 55,
+          "p99": 63,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.0078125,
+          "cpuPct": 87.72397255711726
+        },
+        {
+          "rps": 955.07,
+          "p50": 31,
+          "p97_5": 55,
+          "p99": 69,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.94140625,
+          "cpuPct": 87.53580707481173
+        },
+        {
+          "rps": 968.4,
+          "p50": 31,
+          "p97_5": 53,
+          "p99": 60,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.5546875,
+          "cpuPct": 89.15839275004996
+        },
+        {
+          "rps": 963.07,
+          "p50": 31,
+          "p97_5": 53,
+          "p99": 58,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.56640625,
+          "cpuPct": 88.43129414900694
+        }
+      ],
+      "rust": [
+        {
+          "rps": 2819.54,
+          "p50": 10,
+          "p97_5": 21,
+          "p99": 26,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 13.99609375,
+          "cpuPct": 82.75034979012594
+        },
+        {
+          "rps": 2872.47,
+          "p50": 10,
+          "p97_5": 20,
+          "p99": 25,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.69140625,
+          "cpuPct": 81.0234541577825
+        },
+        {
+          "rps": 2844.47,
+          "p50": 10,
+          "p97_5": 26,
+          "p99": 30,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.89453125,
+          "cpuPct": 81.30081300813019
+        },
+        {
+          "rps": 3117.4,
+          "p50": 9,
+          "p97_5": 23,
+          "p99": 27,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 15.01953125,
+          "cpuPct": 77.90736421192935
+        },
+        {
+          "rps": 3077.94,
+          "p50": 9,
+          "p97_5": 23,
+          "p99": 25,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.8515625,
+          "cpuPct": 78.36865253898472
+        }
+      ]
+    },
+    "search": {
+      "node": [
+        {
+          "rps": 955.34,
+          "p50": 31,
+          "p97_5": 55,
+          "p99": 63,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 102.875,
+          "cpuPct": 83.36109815419475
+        },
+        {
+          "rps": 953.27,
+          "p50": 31,
+          "p97_5": 56,
+          "p99": 65,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 103.42578125,
+          "cpuPct": 82.81145902731498
+        },
+        {
+          "rps": 957.47,
+          "p50": 32,
+          "p97_5": 53,
+          "p99": 58,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.0625,
+          "cpuPct": 83.96081828480038
+        },
+        {
+          "rps": 961.74,
+          "p50": 31,
+          "p97_5": 52,
+          "p99": 58,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.4609375,
+          "cpuPct": 84.1607249950023
+        },
+        {
+          "rps": 961.6,
+          "p50": 31,
+          "p97_5": 53,
+          "p99": 59,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 104.23046875,
+          "cpuPct": 83.89977342396396
+        }
+      ],
+      "rust": [
+        {
+          "rps": 2802.6,
+          "p50": 10,
+          "p97_5": 25,
+          "p99": 29,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.40234375,
+          "cpuPct": 72.02825159914714
+        },
+        {
+          "rps": 2968.2,
+          "p50": 9,
+          "p97_5": 23,
+          "p99": 26,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.66015625,
+          "cpuPct": 69.34914396109527
+        },
+        {
+          "rps": 2861.14,
+          "p50": 10,
+          "p97_5": 24,
+          "p99": 27,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.94140625,
+          "cpuPct": 68.31511596907491
+        },
+        {
+          "rps": 2878.47,
+          "p50": 9,
+          "p97_5": 23,
+          "p99": 27,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 15.09375,
+          "cpuPct": 68.50593096094914
+        },
+        {
+          "rps": 2919.8,
+          "p50": 10,
+          "p97_5": 24,
+          "p99": 27,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.90625,
+          "cpuPct": 69.51479605438516
+        }
+      ]
+    },
+    "login-bcrypt": {
+      "node": [
+        {
+          "rps": 15,
+          "p50": 464,
+          "p97_5": 735,
+          "p99": 745,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 93.90625,
+          "cpuPct": 100.61971080162597
+        },
+        {
+          "rps": 14.87,
+          "p50": 465,
+          "p97_5": 793,
+          "p99": 803,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 96.109375,
+          "cpuPct": 100.51958433253398
+        },
+        {
+          "rps": 15.07,
+          "p50": 463,
+          "p97_5": 856,
+          "p99": 918,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 96.01171875,
+          "cpuPct": 100.4864396614914
+        },
+        {
+          "rps": 14.67,
+          "p50": 465,
+          "p97_5": 881,
+          "p99": 930,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 95.91015625,
+          "cpuPct": 99.51343064720393
+        },
+        {
+          "rps": 14.74,
+          "p50": 476,
+          "p97_5": 866,
+          "p99": 945,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 96.2578125,
+          "cpuPct": 100.37992401519698
+        }
+      ],
+      "rust": [
+        {
+          "rps": 32.47,
+          "p50": 237,
+          "p97_5": 403,
+          "p99": 432,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.578125,
+          "cpuPct": 182.93251615481984
+        },
+        {
+          "rps": 33.4,
+          "p50": 233,
+          "p97_5": 381,
+          "p99": 396,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.6640625,
+          "cpuPct": 188.60379873375547
+        },
+        {
+          "rps": 32.94,
+          "p50": 231,
+          "p97_5": 443,
+          "p99": 486,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.9453125,
+          "cpuPct": 185.40486504498494
+        },
+        {
+          "rps": 33.21,
+          "p50": 234,
+          "p97_5": 382,
+          "p99": 408,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 15.09765625,
+          "cpuPct": 187.02926081450377
+        },
+        {
+          "rps": 32.54,
+          "p50": 236,
+          "p97_5": 402,
+          "p99": 425,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.9140625,
+          "cpuPct": 183.62994067853106
+        }
+      ]
+    },
+    "order-write": {
+      "node": [
+        {
+          "rps": 116.27,
+          "p50": 85,
+          "p97_5": 514,
+          "p99": 682,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 98.65234375,
+          "cpuPct": 80.85248085248085
+        },
+        {
+          "rps": 116.94,
+          "p50": 86,
+          "p97_5": 481,
+          "p99": 701,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 98.99609375,
+          "cpuPct": 79.54696868754164
+        },
+        {
+          "rps": 110.8,
+          "p50": 85,
+          "p97_5": 584,
+          "p99": 775,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 99.5703125,
+          "cpuPct": 78.21973482577125
+        },
+        {
+          "rps": 112,
+          "p50": 94,
+          "p97_5": 507,
+          "p99": 671,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 99.01953125,
+          "cpuPct": 79.4031441513457
+        },
+        {
+          "rps": 118.14,
+          "p50": 92,
+          "p97_5": 500,
+          "p99": 636,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 99.421875,
+          "cpuPct": 79.37354215261595
+        }
+      ],
+      "rust": [
+        {
+          "rps": 389,
+          "p50": 18,
+          "p97_5": 221,
+          "p99": 315,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.6484375,
+          "cpuPct": 38.31545278869861
+        },
+        {
+          "rps": 386,
+          "p50": 17,
+          "p97_5": 220,
+          "p99": 328,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.66796875,
+          "cpuPct": 37.90553594031042
+        },
+        {
+          "rps": 383.2,
+          "p50": 18,
+          "p97_5": 213,
+          "p99": 322,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.95703125,
+          "cpuPct": 38.18218164856393
+        },
+        {
+          "rps": 387.14,
+          "p50": 18,
+          "p97_5": 218,
+          "p99": 328,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.83984375,
+          "cpuPct": 38.253915361546206
+        },
+        {
+          "rps": 381.4,
+          "p50": 18,
+          "p97_5": 233,
+          "p99": 338,
+          "non2xx": 0,
+          "errors": 0,
+          "rssMb": 14.859375,
+          "cpuPct": 38.1847261095563
+        }
+      ]
+    }
+  }
+}

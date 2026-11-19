@@ -101,12 +101,12 @@ function Orders({ signedIn }: { signedIn: boolean }) {
 
 function Dashboard() {
   const [gw, setGw] = useState<Gw | null>(null);
-  const [ver, setVer] = useState<any>(null); const [conc, setConc] = useState<any>(null); const [bench, setBench] = useState<any>(null);
+  const [ver, setVer] = useState<any>(null); const [conc, setConc] = useState<any>(null); const [bench, setBench] = useState<{ a: any; b: any } | null>(null);
   const refresh = useCallback(async () => { try { setGw(await (await fetch("/__gateway/status")).json()); } catch { setGw(null); } }, []);
   useEffect(() => { refresh(); const t = setInterval(refresh, 2000); return () => clearInterval(t); }, [refresh]);
   useEffect(() => {
     const get = (u: string, set: (v: any) => void) => fetch(u).then((r) => (r.ok ? r.json() : null)).then(set).catch(() => set(null));
-    get("/reports/verification.json", setVer); get("/reports/concurrency.json", setConc); get("/benchmarks/latest.json", setBench);
+    get("/reports/verification.json", setVer); get("/reports/concurrency.json", setConc); Promise.all([fetch("/benchmarks/run-A-two-cores.json"), fetch("/benchmarks/run-B-one-core.json")]).then(async ([a, b]) => setBench(a.ok && b.ok ? { a: await a.json(), b: await b.json() } : null)).catch(() => setBench(null));
   }, []);
   const route = async (mode: string, extra: object = {}) => { await fetch("/__gateway/route", { method: "POST", body: JSON.stringify({ mode, ...extra }) }); refresh(); };
   return <section className="dash">
@@ -128,8 +128,23 @@ function Dashboard() {
     {conc && <p className={conc.pass ? "ok" : "err"}>Concurrency ({conc.customers} customers, {conc.stock} units): <b>{conc.pass ? "PASS" : "FAIL"}</b> — {conc.results.map((r: any) => `${r.backend}: ${r.created201}×201, ${r.conflicts409}×409, stock ${r.finalStock}`).join(" | ")}</p>}
 
     <h2>Benchmarks</h2>
-    {bench ? <pre>{JSON.stringify(bench.summary ?? bench, null, 2)}</pre> : <p>No benchmark results saved yet (<code>make benchmark</code>). Official numbers are produced outside the dashboard.</p>}
+    {bench ? <>
+      <BenchTable title="Run B: one core per server (per-core comparison)" d={bench.b} />
+      <BenchTable title="Run A: two cores shared with MongoDB" d={bench.a} />
+      <p className="muted">Saved results from a reproducible script run outside the dashboard (<code>benchmarks/benchmark.mjs</code>), median of {bench.b.environment.rounds} alternating rounds of {bench.b.environment.durationSec} s. Ranges are min-max. These are results at one offered load on one machine, not capacity limits: see docs/performance-report.md.</p>
+    </> : <p>No benchmark results saved yet. Official numbers are produced outside the dashboard.</p>}
   </section>;
+}
+
+function BenchTable({ title, d }: { title: string; d: any }) {
+  const rows = Object.values(d.summary) as any[];
+  const r0 = (x: number) => Math.round(x).toLocaleString();
+  return <><h3>{title}</h3><table><thead><tr><th>scenario</th><th>Node req/s</th><th>Rust req/s</th><th>Rust / Node</th><th>p99 (Node / Rust)</th></tr></thead><tbody>
+    {rows.map((v) => <tr key={v.label}><td>{v.label}</td>
+      <td>{r0(v.node.rps.median)} <small>({r0(v.node.rps.min)}-{r0(v.node.rps.max)})</small></td>
+      <td>{r0(v.rust.rps.median)} <small>({r0(v.rust.rps.min)}-{r0(v.rust.rps.max)})</small></td>
+      <td>{v.rustVsNodeRps}x</td><td>{v.node.p99ms.median} / {v.rust.p99ms.median} ms</td></tr>)}
+  </tbody></table><p className="muted">{d.environment.note}</p></>;
 }
 
 function RequestLog({ log }: { log: LogEntry[] }) {
