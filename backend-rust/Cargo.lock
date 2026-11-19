@@ -106,12 +106,14 @@ dependencies = [
  "axum",
  "bcrypt",
  "chrono",
+ "form_urlencoded",
  "futures",
  "jsonwebtoken",
  "mongodb",
  "serde",
  "serde_json",
  "tokio",
+ "tower",
  "uuid",
 ]
 

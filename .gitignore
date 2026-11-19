@@ -7,3 +7,5 @@ target/
 benchmarks/results/*.tmp
 backend-rust/bin/
 .iptrust/
+benchmarks/bcrypt-micro/node_modules/
+benchmarks/bcrypt-micro/target/

@@ -17,8 +17,21 @@ const ROUNDS = Number(arg("rounds", 3)), DURATION = Number(arg("duration", 10)),
 const pids = { node: arg("node-pid"), rust: arg("rust-pid") };
 const OUT = new URL("./results/", import.meta.url).pathname;
 
-const rssMb = (pid) => { try { return Number(readFileSync(`/proc/${pid}/status`, "utf8").match(/VmRSS:\s+(\d+)/)[1]) / 1024; } catch { return null; } };
-const cpuSec = (pid) => { try { const f = readFileSync(`/proc/${pid}/stat`, "utf8").split(") ")[1].split(" "); return (Number(f[11]) + Number(f[12])) / 100; } catch { return null; } };
+// A server may be a process tree (Node cluster mode): sample the root and all its descendants.
+import { readdirSync } from "node:fs";
+const ppidOf = (pid) => { try { return Number(readFileSync(`/proc/${pid}/stat`, "utf8").split(") ")[1].split(" ")[1]); } catch { return null; } };
+const tree = (root) => {
+  if (root == null) return [];
+  const parent = new Map();
+  for (const d of readdirSync("/proc")) if (/^\d+$/.test(d)) { const pp = ppidOf(d); if (pp != null) parent.set(Number(d), pp); }
+  const out = [Number(root)];
+  for (let i = 0; i < out.length; i++) for (const [c, pp] of parent) if (pp === out[i] && !out.includes(c)) out.push(c);
+  return out;
+};
+const rssOne = (pid) => { try { return Number(readFileSync(`/proc/${pid}/status`, "utf8").match(/VmRSS:\s+(\d+)/)[1]) / 1024; } catch { return 0; } };
+const cpuOne = (pid) => { try { const f = readFileSync(`/proc/${pid}/stat`, "utf8").split(") ")[1].split(" "); return (Number(f[11]) + Number(f[12])) / 100; } catch { return 0; } };
+const rssMb = (pid) => (pid == null ? null : tree(pid).reduce((n, p) => n + rssOne(p), 0));
+const cpuSec = (pid) => (pid == null ? null : tree(pid).reduce((n, p) => n + cpuOne(p), 0));
 const median = (a) => { const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 
 async function login(base, email) {
