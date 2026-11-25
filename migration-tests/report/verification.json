@@ -1,6 +1,6 @@
 {
   "knownDifferences": 2,
-  "generatedAt": "2026-11-19T01:48:28.818Z",
+  "generatedAt": "2026-11-19T05:24:40.020Z",
   "original": {
     "name": "node",
     "url": "http://node-verify:3011",
@@ -11,8 +11,8 @@
     "url": "http://rust-verify:3012",
     "db": "verify_rust"
   },
-  "total": 158,
-  "passed": 158,
+  "total": 160,
+  "passed": 160,
   "dbDiffGroups": 0,
   "verified": true,
   "groups": [
@@ -1973,6 +1973,62 @@
         {
           "knownDiff": false,
           "knownStale": false,
+          "name": "register: email with U+FEFF (whitespace to JS, not to Unicode)",
+          "request": "POST /api/auth/register",
+          "original": 400,
+          "replacement": 400,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          },
+          "replacementBody": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Request validation failed",
+              "details": [
+                {
+                  "field": "email",
+                  "message": "must be a valid email address"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
+          "name": "register: email with U+0085 (not whitespace to JS)",
+          "request": "POST /api/auth/register",
+          "original": 201,
+          "replacement": 201,
+          "pass": true,
+          "diffs": [],
+          "originalBody": {
+            "id": 4,
+            "email": "nel@y.io",
+            "name": "X",
+            "role": "customer"
+          },
+          "replacementBody": {
+            "id": 4,
+            "email": "nel@y.io",
+            "name": "X",
+            "role": "customer"
+          }
+        },
+        {
+          "knownDiff": false,
+          "knownStale": false,
           "name": "register: short password",
           "request": "POST /api/auth/register",
           "original": 400,
@@ -2014,13 +2070,13 @@
           "pass": true,
           "diffs": [],
           "originalBody": {
-            "id": 4,
+            "id": 5,
             "email": "emoji@y.io",
             "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
             "role": "customer"
           },
           "replacementBody": {
-            "id": 4,
+            "id": 5,
             "email": "emoji@y.io",
             "name": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
             "role": "customer"
@@ -2070,13 +2126,13 @@
           "pass": true,
           "diffs": [],
           "originalBody": {
-            "id": 5,
+            "id": 6,
             "email": "mixed@case.io",
             "name": "Mixed",
             "role": "customer"
           },
           "replacementBody": {
-            "id": 5,
+            "id": 6,
             "email": "mixed@case.io",
             "name": "Mixed",
             "role": "customer"
@@ -2114,13 +2170,13 @@
           "pass": true,
           "diffs": [],
           "originalBody": {
-            "id": 7,
+            "id": 8,
             "email": "ct@y.io",
             "name": "CT",
             "role": "customer"
           },
           "replacementBody": {
-            "id": 7,
+            "id": 8,
             "email": "ct@y.io",
             "name": "CT",
             "role": "customer"

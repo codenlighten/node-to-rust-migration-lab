@@ -7,7 +7,7 @@ identically seeded). Re-generate with `make verify-migration`.
 
 | Check | Result |
 |---|---|
-| Request fixtures (158 steps across 6 groups, including per-group account setup) | 156 identical, 2 documented known differences, 0 unexpected mismatches |
+| Request fixtures (160 steps across 6 groups, including per-group account setup) | 158 identical, 2 documented known differences, 0 unexpected mismatches |
 | Database state after every mutating step | identical in all 6 groups |
 | Oversell test: 100 customers, 10 units | both: exactly 10 orders, 90 clean `409 INSUFFICIENT_STOCK`, final stock 0 |
 | Opposite lock order across two products, 40 concurrent orders | both: 40/40 succeed, stock consistent |
@@ -17,7 +17,7 @@ identically seeded). Re-generate with `make verify-migration`.
 "Identical" means identical status code, content-type media type, JSON body (after masking only timestamps and JWTs) and
 database state. This is **parity on a reviewable fixture set**, not a proof of equivalence.
 
-The same result was reproduced independently on a GitHub Actions runner from a clean checkout (`make verify-migration`: 156 identical, 2 known
+The same result was reproduced independently on a GitHub Actions runner from a clean checkout (`make verify-migration`: 158 identical, 2 known
 differences, 0 unexpected mismatches; oversell test passes on both backends).
 
 ## What the harness found while this repo was built

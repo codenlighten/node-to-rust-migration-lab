@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T01:48:48.737Z",
+  "generatedAt": "2026-11-19T05:25:00.211Z",
   "customers": 100,
   "stock": 10,
   "pass": true,
@@ -13,7 +13,7 @@
       "persistedOrders": 10,
       "distinctOrderIds": 10,
       "badConflicts": 0,
-      "elapsedMs": 727,
+      "elapsedMs": 693,
       "mixedOrderOk": 40,
       "mixedStockConsistent": true
     },
@@ -26,7 +26,7 @@
       "persistedOrders": 10,
       "distinctOrderIds": 10,
       "badConflicts": 0,
-      "elapsedMs": 310,
+      "elapsedMs": 351,
       "mixedOrderOk": 40,
       "mixedStockConsistent": true
     }
