@@ -34,6 +34,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build and run migration verification (contract + concurrency)
         run: make verify-migration
+      - name: Shared database and gateway (users, tokens and orders cross between the two services)
+        run: |
+          docker compose --profile verify down -v
+          docker compose up --build -d node-api rust-api gateway
+          for port in 3001 3002 8080; do
+            for i in $(seq 60); do curl -sf -m 2 "http://127.0.0.1:$port/health" >/dev/null && break; sleep 1; done
+          done
+          docker compose run --rm --no-deps -e DEMO_NODE_URL=http://node-api:3001 -e DEMO_RUST_URL=http://rust-api:3002 \
+            -e GATEWAY_URL=http://gateway:8080 verify node interop.mjs
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
