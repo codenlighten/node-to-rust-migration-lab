@@ -95,19 +95,12 @@ struct Claims {
     exp: usize,
 }
 
-/// What is read from a presented token. `exp` and `nbf` are checked by jsonwebtoken from the same payload, which also
-/// allows the fractional times that the Node service accepts.
+/// What is read from a presented token. `exp` and `nbf` are left to jsonwebtoken, which checks them in the same
+/// payload and accepts the fractional times that the Node service accepts.
 #[derive(Deserialize)]
 struct Caller {
     sub: String,
     role: String,
-    #[serde(default, deserialize_with = "present")]
-    nbf: Option<Value>,
-}
-
-/// Keeps `"nbf": null` (`Some(Null)`) apart from a token with no `nbf` at all (`None`).
-fn present<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<Value>, D::Error> {
-    Value::deserialize(d).map(Some)
 }
 
 /// Numeric BSON field as i64, tolerant of Int32/Int64/Double (the Node driver may write either).
@@ -247,10 +240,9 @@ fn auth(a: &App, h: &HeaderMap) -> Result<Caller, ApiError> {
     let mut val = Validation::new(Algorithm::HS256);
     val.leeway = 0;
     val.set_required_spec_claims(&["exp"]);
-    val.validate_nbf = true; // off by default in this crate; the Node service refuses a not-yet-valid token
+    val.validate_nbf = true; // off by default; also refuses an nbf that is not a number, such as text or null
     decode::<Caller>(tok, &DecodingKey::from_secret(a.secret.as_bytes()), &val)
         .ok()
-        .filter(|t| t.claims.nbf != Some(Value::Null)) // the crate reads null as absent; Node refuses it
         .filter(|t| t.claims.role == "customer" || t.claims.role == "admin")
         .map(|t| t.claims)
         .ok_or_else(|| ApiError::new(401, "UNAUTHORIZED", "Invalid or expired token"))
