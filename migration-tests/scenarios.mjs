@@ -1,9 +1,16 @@
 // Explicit request fixtures. Each group runs in order against a freshly reset + seeded database,
 // on BOTH backends, and every step's observable response is compared.
-// Step: { name, method, path, as?: "admin"|"alice"|"bob"|"badtoken", body?: object|string, contentType?, headers? }
+// Step: { name, method, path, as?: "admin"|"alice"|"bob"|"badtoken", body?: object|string, contentType?, headers?,
+//         claims?: (nowSeconds) => payload, sign?: { alg?, secret? }, expect?: status | [original, replacement] }
 // After a group the full database state of each side is compared as well.
 const S = (name, method, path, extra = {}) => ({ name, method, path, ...extra });
 const emoji = (n) => "🙂".repeat(n);
+
+// Crafted tokens for /api/me. Every group registers admin, alice, bob in that order on a reset database: alice is "2".
+const alice = (now) => ({ sub: "2", role: "customer", exp: now + 600 });
+const T = (name, expect, change = (c) => c, extra = {}) =>
+  S(`token: ${name}`, "GET", "/api/me", { claims: (now) => change(alice(now), now), expect, ...extra });
+const without = ({ exp, ...rest }) => rest;
 
 export const groups = [
   {
@@ -72,6 +79,22 @@ export const groups = [
       S("me: no header", "GET", "/api/me"),
       S("me: malformed token", "GET", "/api/me", { as: "badtoken" }),
       S("me: ok", "GET", "/api/me", { as: "alice" }),
+      T("well formed and signed (control for the refusals below)", 200),
+      T("expired", 401, (c, now) => ({ ...c, exp: now - 60 })),
+      T("exp written as a string", 401, (c) => ({ ...c, exp: String(c.exp) })),
+      T("exp with a fraction", 200, (c) => ({ ...c, exp: c.exp + 0.5 })),
+      T("nbf in the past", 200, (c, now) => ({ ...c, nbf: now - 60 })),
+      T("nbf in the future", 401, (c, now) => ({ ...c, nbf: now + 600 })),
+      T("nbf in the future, written as a string", 401, (c, now) => ({ ...c, nbf: String(now + 600) })),
+      T("nbf null", 401, (c) => ({ ...c, nbf: null })),
+      T("signed with another secret", 401, undefined, { sign: { secret: "not-the-server-secret" } }),
+      T("alg none", 401, undefined, { sign: { alg: "none" } }),
+      T("alg HS384", 401, undefined, { sign: { alg: "HS384" } }),
+      T("unknown role", 401, (c) => ({ ...c, role: "root" })),
+      T("numeric sub", 401, (c) => ({ ...c, sub: 2 })),
+      T("sub of a user that does not exist", 401, (c) => ({ ...c, sub: "999" })),
+      T("no exp", [200, 401], without, { known: "Node's jsonwebtoken accepts a token with no expiry; the Rust service requires one. Rust is deliberately stricter. Neither login issues such a token." }),
+      T('sub written as "2.0"', [200, 401], (c) => ({ ...c, sub: "2.0" }), { known: "Node reads the subject with Number(), so \"2.0\" means user 2; Rust parses an integer and finds no user. Neither login issues such a token." }),
       S("body too large", "POST", "/api/auth/login", { body: "x".repeat(200_000) }),
     ],
   },

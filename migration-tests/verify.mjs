@@ -4,7 +4,8 @@
 // identically seeded database, and compares status, content type, normalised body and resulting DB state.
 import { writeFileSync, mkdirSync } from "node:fs";
 import { groups } from "./scenarios.mjs";
-import { cfg, connect, dumpState, resetAndSeed, waitFor } from "./lib/env.mjs";
+import { cfg, connect, dumpState, mintToken, resetAndSeed, waitFor } from "./lib/env.mjs";
+import { judge, unmetExpectations } from "./lib/judge.mjs";
 
 const OUT = new URL("./report/", import.meta.url).pathname;
 const PASSWORD = "password123";
@@ -23,9 +24,10 @@ function normalise(v, key = "") {
   return v;
 }
 
-async function call(base, step, tokens) {
+async function call(base, step, tokens, crafted) {
   const headers = {};
-  if (step.as === "badtoken") headers.authorization = "Bearer not.a.token";
+  if (crafted) headers.authorization = `Bearer ${crafted}`;
+  else if (step.as === "badtoken") headers.authorization = "Bearer not.a.token";
   else if (step.as) headers.authorization = `Bearer ${tokens[step.as]}`;
   let body;
   if (step.body !== undefined) {
@@ -72,7 +74,9 @@ async function main() {
     const steps = [...preamble, ...g.steps];
     const gr = { group: g.name, steps: [], dbDiff: [] };
     for (const step of steps) {
-      const [a, b] = await Promise.all([call(O.url, step, tokens.original), call(R.url, step, tokens.replacement)]);
+      // a crafted token is made once per step, so both backends receive the same bytes
+      const crafted = step.claims && mintToken(step.claims(Math.floor(Date.now() / 1000)), step.sign);
+      const [a, b] = await Promise.all([call(O.url, step, tokens.original, crafted), call(R.url, step, tokens.replacement, crafted)]);
       if (step.save) {
         // A broken setup would make every later step "agree" on failures: abort the group instead.
         if (a.status !== 200 || b.status !== 200 || !a.rawJson?.token || !b.rawJson?.token) throw new Error(`setup failed in group "${g.name}": ${step.name} (${a.status}/${b.status})`);
@@ -90,8 +94,9 @@ async function main() {
       if (a.hasRequestId !== b.hasRequestId) diffs.push(`x-request-id header presence differs`);
       diffs.push(...diffPaths(a.body, b.body, "body"));
       stepDb.slice(0, 3).forEach((d) => diffs.push(`db: ${d}`));
-      const knownDiff = !!step.known && diffs.length > 0;
-      gr.steps.push({ known: step.known, knownDiff, knownStale: !!step.known && diffs.length === 0, name: step.name, request: `${step.method} ${step.path}`, original: a.status, replacement: b.status, pass: diffs.length === 0 || knownDiff, diffs, originalBody: a.body, replacementBody: b.body });
+      const unmet = unmetExpectations(step, a.status, b.status);
+      const verdict = judge(step, diffs, unmet);
+      gr.steps.push({ known: step.known, ...verdict, name: step.name, request: `${step.method} ${step.path}`, original: a.status, replacement: b.status, diffs: [...unmet, ...diffs], originalBody: a.body, replacementBody: b.body });
     }
     const [da, db] = await Promise.all([dumpState(mongo, O.db), dumpState(mongo, R.db)]);
     gr.dbDiff = diffPaths(da, db);

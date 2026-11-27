@@ -1,4 +1,5 @@
 // Shared configuration + helpers for the verification harness.
+import { createHmac } from "node:crypto";
 import { MongoClient } from "mongodb";
 import { Agent, setGlobalDispatcher } from "undici";
 
@@ -14,6 +15,14 @@ export const cfg = {
   // The demo pair shares ONE database (used for interoperability checks).
   demo: { node: process.env.DEMO_NODE_URL ?? "http://localhost:3001", rust: process.env.DEMO_RUST_URL ?? "http://localhost:3002" },
 };
+
+/** A hand-built JWT, for tokens that neither backend would issue. `alg: "none"` produces an unsigned one. */
+export function mintToken(claims, { alg = "HS256", secret = process.env.JWT_SECRET ?? "dev-only-secret-change-me" } = {}) {
+  const part = (o) => Buffer.from(JSON.stringify(o)).toString("base64url");
+  const body = `${part({ alg, typ: "JWT" })}.${part(claims)}`;
+  if (alg === "none") return `${body}.`;
+  return `${body}.${createHmac(alg === "HS384" ? "sha384" : "sha256", secret).update(body).digest("base64url")}`;
+}
 
 export const SEED_PRODUCTS = [
   ["KB-001", "Mechanical Keyboard", "Tenkeyless, brown switches", 8999, 50],

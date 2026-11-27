@@ -79,6 +79,7 @@ services:
       MONGO_URL: mongodb://mongo:27017/?replicaSet=rs0
       ORIGINAL_URL: http://node-verify:3011
       REPLACEMENT_URL: http://rust-verify:3012
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
     volumes: ["./migration-tests/report:/app/report"]
     depends_on: [node-verify, rust-verify]
 
