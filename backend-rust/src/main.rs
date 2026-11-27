@@ -95,6 +95,21 @@ struct Claims {
     exp: usize,
 }
 
+/// What is read from a presented token. `exp` and `nbf` are checked by jsonwebtoken from the same payload, which also
+/// allows the fractional times that the Node service accepts.
+#[derive(Deserialize)]
+struct Caller {
+    sub: String,
+    role: String,
+    #[serde(default, deserialize_with = "present")]
+    nbf: Option<Value>,
+}
+
+/// Keeps `"nbf": null` (`Some(Null)`) apart from a token with no `nbf` at all (`None`).
+fn present<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<Value>, D::Error> {
+    Value::deserialize(d).map(Some)
+}
+
 /// Numeric BSON field as i64, tolerant of Int32/Int64/Double (the Node driver may write either).
 fn num(d: &Document, k: &str) -> i64 {
     match d.get(k) {
@@ -223,7 +238,7 @@ async fn next_id(a: &App, name: &str, session: Option<&mut ClientSession>) -> Re
 
 // ---------------------------------------------------------------- auth
 
-fn auth(a: &App, h: &HeaderMap) -> Result<Claims, ApiError> {
+fn auth(a: &App, h: &HeaderMap) -> Result<Caller, ApiError> {
     let hv = h.get(header::AUTHORIZATION).and_then(|v| v.to_str().ok());
     let tok = match hv {
         Some(v) if v.starts_with("Bearer ") => &v[7..],
@@ -231,20 +246,23 @@ fn auth(a: &App, h: &HeaderMap) -> Result<Claims, ApiError> {
     };
     let mut val = Validation::new(Algorithm::HS256);
     val.leeway = 0;
-    decode::<Claims>(tok, &DecodingKey::from_secret(a.secret.as_bytes()), &val)
+    val.set_required_spec_claims(&["exp"]);
+    val.validate_nbf = true; // off by default in this crate; the Node service refuses a not-yet-valid token
+    decode::<Caller>(tok, &DecodingKey::from_secret(a.secret.as_bytes()), &val)
         .ok()
+        .filter(|t| t.claims.nbf != Some(Value::Null)) // the crate reads null as absent; Node refuses it
         .filter(|t| t.claims.role == "customer" || t.claims.role == "admin")
         .map(|t| t.claims)
         .ok_or_else(|| ApiError::new(401, "UNAUTHORIZED", "Invalid or expired token"))
 }
-fn admin(a: &App, h: &HeaderMap) -> Result<Claims, ApiError> {
+fn admin(a: &App, h: &HeaderMap) -> Result<Caller, ApiError> {
     let c = auth(a, h)?;
     if c.role != "admin" {
         return Err(ApiError::new(403, "FORBIDDEN", "Admin role required"));
     }
     Ok(c)
 }
-fn uid(c: &Claims) -> i32 {
+fn uid(c: &Caller) -> i32 {
     c.sub.parse().unwrap_or(0)
 }
 
@@ -625,7 +643,7 @@ async fn create_order(State(a): S, h: HeaderMap, body: Bytes) -> R {
     status(201, order_out(&order))
 }
 
-async fn load_order(a: &App, c: &Claims, id: i32) -> Result<Document, ApiError> {
+async fn load_order(a: &App, c: &Caller, id: i32) -> Result<Document, ApiError> {
     let f = if c.role == "admin" { doc! {"_id": id} } else { doc! {"_id": id, "userId": uid(c)} };
     a.orders.find_one(f).await?.ok_or_else(|| ApiError::not_found("Order"))
 }
